@@ -14,13 +14,44 @@ interface Image {
   uri: string;
 }
 
-type MessageContent = Markdown | Image;
+export type MessageContent = Markdown | Image;
 
-interface Message extends Evt {
+export interface Message extends Evt {
   kind: "message";
   parent: string | null;
   below: string | null;
   contents: MessageContent[];
+}
+
+export interface Range {
+  start: number;
+  end: number;
+}
+export interface Highlight {
+  range: Range | null;
+  kind: "highlight";
+}
+
+export interface QuoteReply {
+  kind: "quote_reply";
+  range: Range | null;
+  contents: MessageContent[];
+}
+
+export interface Reaction {
+  kind: "reaction";
+  emoji: string;
+  range: Range | null;
+}
+
+export type EmbellishmentContent = Highlight | QuoteReply | Reaction;
+
+export interface Embellishment extends Evt {
+  kind: "embellishment";
+  parent: string;
+  below: string | null;
+  contentIndex: number | null;
+  contents: EmbellishmentContent[];
 }
 
 interface Join {
@@ -46,4 +77,4 @@ interface MembershipChanged extends Evt {
   contents: MembershipChange;
 }
 
-export type Event = Message | MembershipChanged;
+export type Event = Message | Embellishment | MembershipChanged;
