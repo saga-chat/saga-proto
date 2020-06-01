@@ -24,4 +24,9 @@ const dummyRoom: Room = {
   ],
   lastTyping: {},
 };
+// TODO: nesting combinators, images, reactions, embellishment ranges
+// membership events
+// member profile info (online status, avatar)
+// typing status
+// read status
 export default dummyRoom;
