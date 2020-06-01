@@ -17,7 +17,7 @@ const Content: React.FC<{
   } else if (content.kind === "image") {
     return <img src={content.uri} />;
   }
-  return <pre>unimplemented {content.kind}</pre>;
+  return <pre>unimplemented</pre>;
 };
 
 export default Content;
