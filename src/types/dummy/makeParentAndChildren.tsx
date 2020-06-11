@@ -1,4 +1,5 @@
-import { Message, Event } from "../events";
+import { Event } from "../events";
+import correctBelowChain from "./correctBelowChain";
 import uniqid from "uniqid";
 import makeMessage from "./makeMessage";
 export default (
@@ -19,11 +20,12 @@ export default (
   );
   return [
     parentMessage,
-    ...children.map((evt: Event, index: number) => ({
-      ...evt,
-      id: ids[index],
-      below: index === 0 ? null : ids[index],
-      parent: parentID,
-    })),
+    ...correctBelowChain(
+      children.map((evt: Event) => ({
+        ...evt,
+        parent: parentID,
+      })),
+      null
+    ),
   ];
 };
