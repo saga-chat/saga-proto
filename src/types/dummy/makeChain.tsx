@@ -1,4 +1,5 @@
 import { Message } from "../events";
+import makeMessage from "./makeMessage";
 import uniqid from "uniqid";
 export default (
   creatorID: string,
@@ -7,19 +8,13 @@ export default (
   below: string | null
 ): Message[] => {
   const ids = messages.map(() => uniqid());
-  return messages.map((msg: string, index: number) => ({
-    kind: "message",
-    parent,
-    below: index === 0 ? below : ids[index - 1],
-    seen_by: [creatorID],
-    creator: creatorID,
-    created: new Date().getTime(),
-    id: ids[index],
-    contents: [
-      {
-        kind: "markdown",
-        contents: msg,
-      },
-    ],
-  }));
+  return messages.map((msg: string, index: number) =>
+    makeMessage(
+      creatorID,
+      msg,
+      parent,
+      index === 0 ? below : ids[index - 1],
+      ids[index]
+    )
+  );
 };

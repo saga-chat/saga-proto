@@ -31,6 +31,8 @@ const filterEmbellishmentsByContentIdx = (
   index: number
 ) => embellishments.filter(({ contentIndex }) => contentIndex === index);
 
+// TODO: hover to show precise time?
+// TODO: make images borderless (conditional padding)
 const Bubble: React.FC<{
   message: Message;
   mode: BubbleMode;

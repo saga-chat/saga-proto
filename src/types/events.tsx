@@ -2,6 +2,7 @@ import Entity from "./entity";
 
 interface Evt extends Entity {
   seen_by: string[];
+  below: string | null;
 }
 
 interface Markdown {
@@ -19,7 +20,6 @@ export type MessageContent = Markdown | Image;
 export interface Message extends Evt {
   kind: "message";
   parent: string | null;
-  below: string | null;
   contents: MessageContent[];
 }
 
@@ -49,7 +49,6 @@ export type EmbellishmentContent = Highlight | QuoteReply | Reaction;
 export interface Embellishment extends Evt {
   kind: "embellishment";
   parent: string;
-  below: string | null;
   contentIndex: number | null;
   contents: EmbellishmentContent[];
 }
