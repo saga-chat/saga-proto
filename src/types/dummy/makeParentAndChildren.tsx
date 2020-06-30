@@ -1,14 +1,14 @@
-import { Event } from "../events";
+import { SagaEvent } from "../events";
 import correctBelowChain from "./correctBelowChain";
 import uniqid from "uniqid";
 import makeMessage from "./makeMessage";
 export default (
   creatorID: string,
   parentMsg: string,
-  children: Event[],
+  children: SagaEvent[],
   parent: string | null,
   below: string | null
-): Event[] => {
+): SagaEvent[] => {
   const ids = children.map(() => uniqid());
   const parentID = uniqid();
   const parentMessage = makeMessage(
@@ -21,7 +21,7 @@ export default (
   return [
     parentMessage,
     ...correctBelowChain(
-      children.map((evt: Event) => ({
+      children.map((evt: SagaEvent) => ({
         ...evt,
         parent: parentID,
       })),

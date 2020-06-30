@@ -9,7 +9,7 @@ export const Singleton = () => (
     message={messageDummy}
     mode={BubbleMode.singleton}
     embellishments={[]}
-    currentHighlight={null}
+    selected={null}
     onReplyClick={action("reply")}
   />
 );
@@ -18,7 +18,7 @@ export const SingletonHighlighted = () => (
     message={messageDummy}
     mode={BubbleMode.singleton}
     embellishments={[]}
-    currentHighlight={1}
+    selected={1}
     onReplyClick={action("reply")}
   />
 );

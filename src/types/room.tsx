@@ -1,5 +1,5 @@
 import Entity from "./entity";
-import { Event } from "./events";
+import { SagaEvent } from "./events";
 
 interface ILastTyping {
   parent: string;
@@ -9,6 +9,6 @@ interface ILastTyping {
 export interface Room extends Entity {
   members: string[];
   name: string | null;
-  events: Event[];
+  events: SagaEvent[];
   lastTyping: Record<string, ILastTyping>;
 }

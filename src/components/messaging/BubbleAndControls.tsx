@@ -5,22 +5,13 @@ import { BubbleProps } from "./Bubble";
 import Content from "./Content";
 import { purple_primary } from "../../colors";
 import Bubble from "./Bubble";
-import SideButtons from "./SideButtons";
+import SideButtons, { SideButtonsData } from "./SideButtons";
 
 const BubbleControlsDiv = styled.div<any>`
+  margin-top: 10px;
   display: flex;
   align-items: center;
 `;
-const BubbleControls = styled.div`
-  display: flex;
-`;
-
-export enum BubbleMode {
-  top,
-  middle,
-  bottom,
-  singleton,
-}
 
 const filterEmbellishmentsByContentIdx = (
   embellishments: Embellishment[],
@@ -32,7 +23,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   message,
   mode,
   embellishments,
-  currentHighlight,
+  selected,
   onReplyClick,
 }) => {
   const [showControls, setShowControls] = React.useState(false);
@@ -44,9 +35,10 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
       <Bubble message={message} mode={mode} embellishments={embellishments} />
       <SideButtons
         show={showControls}
-        selected={currentHighlight}
+        selected={selected}
         onReplyClick={onReplyClick}
       />
+      {embellishments.map((e: Embellishment) => e.id)}
     </BubbleControlsDiv>
   );
 };

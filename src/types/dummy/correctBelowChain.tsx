@@ -1,7 +1,7 @@
-import { Event } from "../events";
+import { SagaEvent } from "../events";
 
-export default (events: Event[], below: string | null) =>
-  events.map((evt: Event, idx: number) => ({
+export default (events: SagaEvent[], below: string | null) =>
+  events.map((evt: SagaEvent, idx: number) => ({
     ...evt,
-    below: idx === 0 ? null : events[idx - 1].id,
+    below: idx === 0 ? below : events[idx - 1].id,
   }));

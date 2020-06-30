@@ -1,4 +1,4 @@
-import { Event } from "../events";
+import { SagaEvent } from "../events";
 import makeMessage from "./makeMessage";
 import correctBelowChain from "./correctBelowChain";
 export default (
@@ -6,7 +6,7 @@ export default (
   messages: string[],
   parent: string | null,
   below: string | null
-): Event[] => {
+): SagaEvent[] => {
   return correctBelowChain(
     messages.map((msg: string) => makeMessage(creatorID, msg, parent, null)),
     below

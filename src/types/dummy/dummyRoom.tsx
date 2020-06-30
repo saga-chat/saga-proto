@@ -4,14 +4,17 @@ import makeChain from "./makeChain";
 import makeMessage from "./makeMessage";
 import makeParentAndChildren from "./makeParentAndChildren";
 import correctBelowChain from "./correctBelowChain";
+import reactToMessage from "./reactToMessage";
 
-const dummyRoom: Room = {
-  creator: "max",
-  created: Date.now(),
-  id: uniqid(),
-  members: ["max", "you"],
-  name: "Telescope emoji",
-  events: correctBelowChain(
+const veryFirst = makeMessage("max", "**Intro to Saga**", null, null);
+const hello = makeMessage("max", "Hello!", null, veryFirst.id);
+const helloReaction = reactToMessage("max", hello, null, "😋", null);
+
+const events = [
+  veryFirst,
+  hello,
+  helloReaction,
+  ...correctBelowChain(
     [
       ...makeChain(
         "max",
@@ -28,13 +31,22 @@ const dummyRoom: Room = {
       ...makeParentAndChildren(
         "max",
         "you can reply to stuff!",
-        [makeMessage("max", "hello", null, null)],
+        [makeMessage("max", "hello from below!", null, null)],
         null,
         null
       ),
     ],
-    null
+    hello.id
   ),
+];
+
+const dummyRoom: Room = {
+  creator: "max",
+  created: Date.now(),
+  id: uniqid(),
+  members: ["max", "you"],
+  name: "Telescope emoji",
+  events,
   lastTyping: {},
 };
 

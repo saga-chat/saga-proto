@@ -1,5 +1,7 @@
+export type id = string;
+export type userid = string;
 export default interface Entity {
-  creator: string;
+  creator: userid;
   created: number;
-  id: string;
+  id: id;
 }
