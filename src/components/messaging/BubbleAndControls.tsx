@@ -10,6 +10,7 @@ import SideButtons, { SideButtonsData } from "./SideButtons";
 const BubbleControlsDiv = styled.div<any>`
   margin-top: 10px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -28,18 +29,20 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   return (
-    <BubbleControlsDiv
-      onMouseOver={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(false)}
-    >
-      <Bubble message={message} mode={mode} embellishments={embellishments} />
-      <SideButtons
-        show={showControls}
-        selected={selected}
-        onReplyClick={onReplyClick}
-      />
+    <div>
+      <BubbleControlsDiv
+        onMouseOver={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
+      >
+        <Bubble message={message} mode={mode} embellishments={embellishments} />
+        <SideButtons
+          show={showControls}
+          selected={selected}
+          onReplyClick={onReplyClick}
+        />
+      </BubbleControlsDiv>
       {embellishments.map((e: Embellishment) => e.id)}
-    </BubbleControlsDiv>
+    </div>
   );
 };
 
