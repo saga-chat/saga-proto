@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Embellishment, Message, SagaEvent, IdArr } from "../../types/events";
+import {
+  Embellishment,
+  Message,
+  SagaEvent,
+  Clustered,
+} from "../../types/events";
 import { idToEvent } from "../../types/utils/buildTree";
 import BubbleAndControls from "./BubbleAndControls";
 import { BubbleMode } from "./Bubble";
@@ -22,25 +27,30 @@ const CreatorDiv = styled.div`
   padding-left: 10px;
 `;
 
-const Cluster: React.FC<{ cluster: IdArr; tree: idToEvent }> = ({
-  cluster,
-  tree,
-}) => {
+export const clusterHasMessage = (cluster: Clustered, tree: idToEvent) =>
+  cluster
+    .map((id: Id) => tree[id])
+    .some(({ kind }: SagaEvent) => kind === "message");
+
+const Cluster: React.FC<{
+  cluster: Clustered;
+  tree: idToEvent;
+  depth: number;
+}> = ({ cluster, tree, depth }) => {
   return (
     <ClusterDiv>
       <CreatorDiv>{tree[cluster[0]].creator}</CreatorDiv>
       {cluster.map((id: Id, j: number) => {
         if (tree[id].kind === "message") {
           // to get embellishments, filter children
-          const childEvents =
-            tree[id].children !== undefined
-              ? tree[id].children?.flat().map((ch: any) => tree[ch])!
-              : [];
+          const childEvents = tree[id].children || [];
           return (
             <BubbleAndControls
               key={j}
               message={tree[id] as any}
               childEvents={childEvents}
+              depth={depth}
+              tree={tree}
               mode={
                 cluster.length === 1
                   ? BubbleMode.singleton

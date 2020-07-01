@@ -1,9 +1,9 @@
-import { SagaEvent, clusteredIDs } from "../events";
+import { SagaEvent, Clusters } from "../events";
 import clusterIDs from "./clusterIDs";
 import { Id } from "../entity";
 export type idToEvent = { [id: string]: SagaEvent };
 
-const buildTree = (events: SagaEvent[]): [idToEvent, clusteredIDs] => {
+const buildTree = (events: SagaEvent[]): [idToEvent, Clusters] => {
   const byID: idToEvent = {};
   const treeTop: Id[] = [];
   for (const evt of events) {

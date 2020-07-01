@@ -35,7 +35,8 @@ const filterEmbellishmentsByContentIdx = (
 export interface BubbleProps {
   message: Message;
   mode: BubbleMode;
-  childEvents: SagaEvent[];
+  childEvents: clusteredIDs;
+  depth: number;
 }
 
 // TODO: hover to show precise time?

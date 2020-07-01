@@ -1,11 +1,11 @@
 import Entity, { Id, userid } from "./entity";
-export type IdArr = Id[];
-export type clusteredIDs = IdArr[];
+export type Clustered = Id[];
+export type Clusters = Clustered[];
 export interface Evt extends Entity {
   seen_by: userid[];
   below: Id | null;
   parent: Id | null;
-  children?: clusteredIDs;
+  children?: Clusters;
 }
 
 interface Markdown {

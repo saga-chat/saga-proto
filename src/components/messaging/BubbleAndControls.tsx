@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Message, Embellishment } from "../../types/events";
+import { Embellishment, Clustered } from "../../types/events";
 import { BubbleProps } from "./Bubble";
-import Content from "./Content";
-import { purple_primary } from "../../colors";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
+import Cluster, { clusterHasMessage } from "./Cluster";
+import { idToEvent } from "../../types/utils/buildTree";
 
 const BubbleControlsDiv = styled.div<any>`
   margin-top: 5px;
@@ -19,11 +19,13 @@ const filterEmbellishmentsByContentIdx = (
   index: number
 ) => embellishments.filter(({ contentIndex }) => contentIndex === index);
 
-type BubbleAndControlsProps = BubbleProps;
+type BubbleAndControlsProps = BubbleProps & { tree: idToEvent };
 const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   message,
   mode,
   childEvents,
+  depth,
+  tree,
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
@@ -35,7 +37,12 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
         onMouseDown={() => setSelected(1)}
         onMouseUp={() => setSelected(null)}
       >
-        <Bubble message={message} mode={mode} childEvents={childEvents} />
+        <Bubble
+          message={message}
+          mode={mode}
+          childEvents={childEvents}
+          depth={depth}
+        />
         <SideButtons
           show={showControls}
           selected={selected}
@@ -43,6 +50,13 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
         />
       </BubbleControlsDiv>
       {childEvents.length > 0 && <MoreReplies childEvents={childEvents} />}
+      <div style={{ paddingLeft: "1em" }}>
+        {childEvents.map((cluster: Clustered, i: number) =>
+          clusterHasMessage(cluster, tree) ? (
+            <Cluster key={i} cluster={cluster} tree={tree} depth={depth + 1} />
+          ) : null
+        )}
+      </div>
     </div>
   );
 };

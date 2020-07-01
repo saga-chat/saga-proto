@@ -28,7 +28,7 @@ const MoreReplies: React.FC<{ childEvents: SagaEvent[] }> = ({
     switch (event.kind) {
     }
   });
-  return <More>{childEvents.length} more:</More>;
+  return <More>{childEvents.flat().length} more:</More>;
 };
 
 export default MoreReplies;

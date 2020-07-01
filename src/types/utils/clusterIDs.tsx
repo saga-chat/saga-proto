@@ -1,9 +1,9 @@
-import { SagaEvent, clusteredIDs } from "../events";
+import { SagaEvent, Clusters } from "../events";
 import { idToEvent } from "./buildTree";
 import { Id } from "../entity";
 import { transform } from "lodash";
 
-const clusterIDs = (events: idToEvent, seed: Id): clusteredIDs => {
+const clusterIDs = (events: idToEvent, seed: Id): Clusters => {
   let cluster: Id[] = [seed];
   let prev = events[seed].below;
   while (prev) {
@@ -12,7 +12,7 @@ const clusterIDs = (events: idToEvent, seed: Id): clusteredIDs => {
   }
   return transform(
     cluster,
-    (clustered: clusteredIDs, current: Id) => {
+    (clustered: Clusters, current: Id) => {
       if (clustered.length === 0) {
         clustered.push([current]);
       } else {
