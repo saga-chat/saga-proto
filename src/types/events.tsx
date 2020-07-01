@@ -36,6 +36,8 @@ export interface Reaction extends Embellishment {
   range: Range | null;
 }
 
+export const SubstantiveContent = ["markdown", "image"];
+
 export type MessageContent = Markdown | Image | Highlight | Reaction;
 export interface Message extends Evt {
   kind: "message";

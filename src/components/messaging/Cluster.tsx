@@ -10,6 +10,7 @@ import { idToEvent } from "../../types/utils/buildTree";
 import BubbleAndControls from "./BubbleAndControls";
 import { BubbleMode } from "./Bubble";
 import { Id } from "../../types/entity";
+import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 
 const ClusterDiv = styled.div`
   display: inline-block;
@@ -27,10 +28,10 @@ const CreatorDiv = styled.div`
   padding-left: 10px;
 `;
 
-export const clusterHasMessage = (cluster: Clustered, tree: idToEvent) =>
-  cluster
-    .map((id: Id) => tree[id])
-    .some(({ kind }: SagaEvent) => kind === "message");
+export const clusterHasSubstantiveMessage = (
+  cluster: Clustered,
+  tree: idToEvent
+) => cluster.map((id: Id) => tree[id]).some(isSubstantiveMessage);
 
 const Cluster: React.FC<{
   cluster: Clustered;
@@ -41,7 +42,7 @@ const Cluster: React.FC<{
     <ClusterDiv>
       <CreatorDiv>{tree[cluster[0]].creator}</CreatorDiv>
       {cluster.map((id: Id, j: number) => {
-        if (tree[id].kind === "message") {
+        if (isSubstantiveMessage(tree[id])) {
           // to get embellishments, filter children
           const childEvents = tree[id].children || [];
           return (
