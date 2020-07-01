@@ -28,42 +28,39 @@ const CreatorDiv = styled.div`
   padding-left: 10px;
 `;
 
-export const clusterHasSubstantiveMessage = (
-  cluster: Clustered,
-  tree: idToEvent
-) => cluster.map((id: Id) => tree[id]).some(isSubstantiveMessage);
+export const clusterSubstantives = (cluster: Clustered, tree: idToEvent) =>
+  cluster.map((id: Id) => tree[id]).filter(isSubstantiveMessage) as Message[];
 
 const Cluster: React.FC<{
   cluster: Clustered;
   tree: idToEvent;
   depth: number;
 }> = ({ cluster, tree, depth }) => {
+  const substantives = clusterSubstantives(cluster, tree);
   return (
     <ClusterDiv>
       <CreatorDiv>{tree[cluster[0]].creator}</CreatorDiv>
-      {cluster.map((id: Id, j: number) => {
-        if (isSubstantiveMessage(tree[id])) {
-          // to get embellishments, filter children
-          const childEvents = tree[id].children || [];
-          return (
-            <BubbleAndControls
-              key={j}
-              message={tree[id] as any}
-              childEvents={childEvents}
-              depth={depth}
-              tree={tree}
-              mode={
-                cluster.length === 1
-                  ? BubbleMode.singleton
-                  : j === 0
-                  ? BubbleMode.top
-                  : j === cluster.length - 1
-                  ? BubbleMode.bottom
-                  : BubbleMode.middle
-              }
-            />
-          );
-        }
+      {substantives.map((evt: Message, j: number) => {
+        // to get embellishments, filter children
+        const childEvents = evt.children || [];
+        return (
+          <BubbleAndControls
+            key={j}
+            message={evt as any}
+            childEvents={childEvents}
+            depth={depth}
+            tree={tree}
+            mode={
+              cluster.length === 1
+                ? BubbleMode.singleton
+                : j === 0
+                ? BubbleMode.top
+                : j === cluster.length - 1
+                ? BubbleMode.bottom
+                : BubbleMode.middle
+            }
+          />
+        );
       })}
     </ClusterDiv>
   );

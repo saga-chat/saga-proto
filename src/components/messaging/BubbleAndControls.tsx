@@ -5,7 +5,7 @@ import { BubbleProps } from "./Bubble";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
-import Cluster, { clusterHasSubstantiveMessage } from "./Cluster";
+import Cluster, { clusterSubstantives } from "./Cluster";
 import { idToEvent } from "../../types/utils/buildTree";
 
 const BubbleControlsDiv = styled.div<any>`
@@ -54,7 +54,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
       {childEvents.length > 0 && <MoreReplies childEvents={childEvents} />}
       <div style={{ paddingLeft: "1em" }}>
         {childEvents.map((cluster: Clustered, i: number) =>
-          clusterHasSubstantiveMessage(cluster, tree) ? (
+          clusterSubstantives(cluster, tree).length > 0 ? (
             <Cluster key={i} cluster={cluster} tree={tree} depth={depth + 1} />
           ) : null
         )}
