@@ -72,8 +72,4 @@ interface DeletedMessage extends Evt {
   kind: "deleted_message";
 }
 
-export type SagaEvent =
-  | Message
-  | Embellishment
-  | MembershipChanged
-  | DeletedMessage;
+export type SagaEvent = Message | MembershipChanged | DeletedMessage;
