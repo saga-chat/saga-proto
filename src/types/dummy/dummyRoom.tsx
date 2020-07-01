@@ -9,42 +9,46 @@ import reactToMessage from "./reactToMessage";
 const veryFirst = makeMessage("max", "**Intro to Saga**", null, null);
 const hello = makeMessage("max", "Hello!", null, veryFirst.id);
 const helloReaction = reactToMessage("max", hello, null, "😋", null);
+const chain = makeChain(
+  "max",
+  [
+    "Welcome to saga!",
+    "here's a quick tour of all the features",
+    "saga was built on the **vision** that chat should work like a notebook",
+    "you can read more about this vision at https://a9.io/glue-comic",
+    "anyways,",
+  ],
+  null,
+  hello.id
+);
+const parentAndChild = makeParentAndChildren(
+  "max",
+  "you can reply to stuff!",
+  [makeMessage("max", "hello from below!", null, null)],
+  null,
+  chain[chain.length - 1].id
+);
 
+const adaReplies = makeChain(
+  "ada",
+  ["Woah!", "that's really cool!"],
+  null,
+  parentAndChild[0].id
+);
 const events = [
   veryFirst,
   hello,
   helloReaction,
-  ...correctBelowChain(
-    [
-      ...makeChain(
-        "max",
-        [
-          "Welcome to saga!",
-          "here's a quick tour of all the features",
-          "saga was built on the **vision** that chat should work like a notebook",
-          "you can read more about this vision at https://a9.io/glue-comic",
-          "anyways,",
-        ],
-        null,
-        null
-      ),
-      ...makeParentAndChildren(
-        "max",
-        "you can reply to stuff!",
-        [makeMessage("max", "hello from below!", null, null)],
-        null,
-        null
-      ),
-    ],
-    hello.id
-  ),
+  ...chain,
+  ...parentAndChild,
+  ...adaReplies,
 ];
 
 const dummyRoom: Room = {
   creator: "max",
   created: Date.now(),
   id: uniqid(),
-  members: ["max", "you"],
+  members: ["max", "you", "ada"],
   name: "Telescope emoji",
   events,
   lastTyping: {},

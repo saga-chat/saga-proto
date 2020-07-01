@@ -1,10 +1,10 @@
-import Entity, { id, userid } from "./entity";
-export type IdArr = id[];
+import Entity, { Id, userid } from "./entity";
+export type IdArr = Id[];
 export type clusteredIDs = IdArr[];
 export interface Evt extends Entity {
   seen_by: userid[];
-  below: id | null;
-  parent: id | null;
+  below: Id | null;
+  parent: Id | null;
   children?: clusteredIDs;
 }
 
@@ -77,4 +77,12 @@ interface MembershipChanged extends Evt {
   contents: MembershipChange;
 }
 
-export type SagaEvent = Message | Embellishment | MembershipChanged;
+interface DeletedMessage extends Evt {
+  kind: "deleted_message";
+}
+
+export type SagaEvent =
+  | Message
+  | Embellishment
+  | MembershipChanged
+  | DeletedMessage;

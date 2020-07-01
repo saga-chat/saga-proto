@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Message, Embellishment } from "../../types/events";
+import { Message, Embellishment, SagaEvent } from "../../types/events";
 import Content from "./Content";
 import { purple_primary } from "../../colors";
 
@@ -35,19 +35,15 @@ const filterEmbellishmentsByContentIdx = (
 export interface BubbleProps {
   message: Message;
   mode: BubbleMode;
-  embellishments: Embellishment[];
+  childEvents: SagaEvent[];
 }
 
 // TODO: hover to show precise time?
 // TODO: make images borderless (conditional padding)
-const Bubble: React.FC<BubbleProps> = ({ message, mode, embellishments }) => {
+const Bubble: React.FC<BubbleProps> = ({ message, mode, childEvents }) => {
   const { contents } = message;
   const renderedContent = contents.map((content, index) => (
-    <Content
-      key={index}
-      content={content}
-      embellishments={filterEmbellishmentsByContentIdx(embellishments, index)}
-    />
+    <Content key={index} content={content} embellishments={[]} />
   ));
   return <BubbleDiv mode={mode}>{renderedContent}</BubbleDiv>;
 };

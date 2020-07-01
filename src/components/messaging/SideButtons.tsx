@@ -11,6 +11,9 @@ import Zoom from "@material-ui/core/Zoom";
 
 const SideBtns = styled.div<any>`
   display: flex;
+  position: absolute;
+  top: -10px;
+  right: 0;
   justify-content: space-between;
   padding-left: 1em;
   transition: opacity 0.2s;

@@ -6,12 +6,12 @@ import Content from "./Content";
 import { purple_primary } from "../../colors";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
+import MoreReplies from "./MoreReplies";
 
 const BubbleControlsDiv = styled.div<any>`
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-top: 5px;
+  position: relative;
+  width: 100%;
 `;
 
 const filterEmbellishmentsByContentIdx = (
@@ -19,29 +19,30 @@ const filterEmbellishmentsByContentIdx = (
   index: number
 ) => embellishments.filter(({ contentIndex }) => contentIndex === index);
 
-type BubbleAndControlsProps = BubbleProps & SideButtonsData;
+type BubbleAndControlsProps = BubbleProps;
 const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   message,
   mode,
-  embellishments,
-  selected,
-  onReplyClick,
+  childEvents,
 }) => {
   const [showControls, setShowControls] = React.useState(false);
+  const [selected, setSelected] = React.useState(null);
   return (
     <div>
       <BubbleControlsDiv
         onMouseOver={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
+        onMouseDown={() => setSelected(1)}
+        onMouseUp={() => setSelected(null)}
       >
-        <Bubble message={message} mode={mode} embellishments={embellishments} />
+        <Bubble message={message} mode={mode} childEvents={childEvents} />
         <SideButtons
           show={showControls}
           selected={selected}
-          onReplyClick={onReplyClick}
+          onReplyClick={console.log}
         />
       </BubbleControlsDiv>
-      {embellishments.map((e: Embellishment) => e.id)}
+      {childEvents.length > 0 && <MoreReplies childEvents={childEvents} />}
     </div>
   );
 };

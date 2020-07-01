@@ -8,20 +8,10 @@ export const Singleton = () => (
   <BubbleAndControls
     message={messageDummy}
     mode={BubbleMode.singleton}
-    embellishments={[]}
-    selected={null}
-    onReplyClick={action("reply")}
+    childEvents={[]}
   />
 );
-export const SingletonHighlighted = () => (
-  <BubbleAndControls
-    message={messageDummy}
-    mode={BubbleMode.singleton}
-    embellishments={[]}
-    selected={1}
-    onReplyClick={action("reply")}
-  />
-);
+
 export default {
   title: "Controls-Bubble",
   component: BubbleAndControls,
