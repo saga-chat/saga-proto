@@ -7,6 +7,7 @@ import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
 import Cluster, { clusterSubstantives } from "./Cluster";
 import { idToEvent } from "../../types/utils/buildTree";
+import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 
 const BubbleControlsDiv = styled.div<any>`
   margin-top: 5px;
@@ -29,6 +30,9 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
+  if (!isSubstantiveMessage(message)) {
+    return <pre>message has no substance!</pre>;
+  }
   // TODO: partition child events into more... and shown
   // filter out non messages
   return (
