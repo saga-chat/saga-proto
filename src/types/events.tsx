@@ -17,41 +17,32 @@ interface Image {
   kind: "image";
   uri: string;
 }
-
-export type MessageContent = Markdown | Image;
-
-export interface Message extends Evt {
-  kind: "message";
-  contents: MessageContent[];
+export interface Embellishment {
+  contentIndex: number | null;
 }
-
+export interface Quote extends Embellishment {
+  kind: "quote";
+  range: Range | null;
+}
 export interface Range {
   start: number;
   end: number;
 }
-export interface Highlight {
+export interface Highlight extends Embellishment {
   range: Range | null;
   kind: "highlight";
 }
 
-export interface QuoteReply {
-  kind: "quote_reply";
-  range: Range | null;
-  contents: MessageContent[];
-}
-
-export interface Reaction {
+export interface Reaction extends Embellishment {
   kind: "reaction";
   emoji: string;
   range: Range | null;
 }
 
-export type EmbellishmentContent = Highlight | QuoteReply | Reaction;
-
-export interface Embellishment extends Evt {
-  kind: "embellishment";
-  contentIndex: number | null;
-  contents: EmbellishmentContent[];
+export type MessageContent = Markdown | Image | Quote | Highlight | Reaction;
+export interface Message extends Evt {
+  kind: "message";
+  contents: MessageContent[];
 }
 
 interface Join {

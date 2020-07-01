@@ -29,6 +29,8 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
+  // TODO: partition child events into more... and shown
+  // filter out non messages
   return (
     <div>
       <BubbleControlsDiv
