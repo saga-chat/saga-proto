@@ -9,6 +9,7 @@ const Conversation: React.FC<{ room: Room }> = ({ room }) => {
   const { events } = room;
   const [tree, clustered] = buildTree(events);
   console.log(tree, clustered);
+  // TODO: cluster does not support non messages!
   return (
     <div>
       {clustered.map((cluster: Clustered, i: number) => (

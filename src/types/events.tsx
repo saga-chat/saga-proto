@@ -41,6 +41,7 @@ export const SubstantiveContent = ["markdown", "image"];
 export type MessageContent = Markdown | Image | Highlight | Reaction;
 export interface Message extends Evt {
   kind: "message";
+  isDeleted?: boolean;
   contents: MessageContent[];
 }
 
@@ -67,8 +68,4 @@ interface MembershipChanged extends Evt {
   contents: MembershipChange;
 }
 
-interface DeletedMessage extends Evt {
-  kind: "deleted_message";
-}
-
-export type SagaEvent = Message | MembershipChanged | DeletedMessage;
+export type SagaEvent = Message | MembershipChanged;

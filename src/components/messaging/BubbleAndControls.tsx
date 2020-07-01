@@ -34,7 +34,6 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
     return <pre>message has no substance!</pre>;
   }
   // TODO: partition child events into more... and shown
-  // filter out non messages
   return (
     <div>
       <BubbleControlsDiv
