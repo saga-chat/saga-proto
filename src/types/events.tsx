@@ -20,10 +20,7 @@ interface Image {
 export interface Embellishment {
   contentIndex: number | null;
 }
-export interface Quote extends Embellishment {
-  kind: "quote";
-  range: Range | null;
-}
+
 export interface Range {
   start: number;
   end: number;
@@ -39,7 +36,7 @@ export interface Reaction extends Embellishment {
   range: Range | null;
 }
 
-export type MessageContent = Markdown | Image | Quote | Highlight | Reaction;
+export type MessageContent = Markdown | Image | Highlight | Reaction;
 export interface Message extends Evt {
   kind: "message";
   contents: MessageContent[];
