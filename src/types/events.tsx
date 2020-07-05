@@ -17,7 +17,7 @@ interface Image {
   kind: "image";
   uri: string;
 }
-export interface Embellishment {
+export interface Embellishment extends Entity {
   contentIndex: number | null;
 }
 

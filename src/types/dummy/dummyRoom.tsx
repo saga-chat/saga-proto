@@ -31,9 +31,16 @@ const parentAndChild = makeParentAndChildren(
 
 const adaReplies = makeChain(
   "ada",
-  ["Woah!", "that's really cool!"],
+  ["Woah!", "that's really cool!", "what else can it do?"],
   null,
   parentAndChild[0].id
+);
+
+const maxReplies = makeChain(
+  "max",
+  ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
+  adaReplies[1].id,
+  null
 );
 const events = [
   veryFirst,
@@ -42,6 +49,7 @@ const events = [
   ...chain,
   ...parentAndChild,
   ...adaReplies,
+  ...maxReplies,
 ];
 
 const dummyRoom: Room = {

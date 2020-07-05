@@ -1,6 +1,17 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Embellishment, Message, SagaEvent } from "../../types/events";
+import {
+  Embellishment,
+  Message,
+  SagaEvent,
+  MessageContent,
+  Clusters,
+} from "../../types/events";
+import { groupBy } from "lodash";
+import { idToEvent } from "../../types/utils/buildTree";
+import { Id } from "../../types/entity";
+import BorderColor from "@material-ui/icons/BorderColor";
+import MessageIcon from "@material-ui/icons/Message";
 
 const More = styled.div`
   font-family: "Inter", sans-serif;
@@ -21,14 +32,61 @@ const More = styled.div`
   }
 `;
 
-const MoreReplies: React.FC<{ childEvents: SagaEvent[] }> = ({
+const MoreReplies: React.FC<{ childEvents: Clusters; tree: idToEvent }> = ({
   childEvents,
+  tree,
 }) => {
-  const iconified = childEvents.map((event: SagaEvent) => {
-    switch (event.kind) {
+  const contents = childEvents
+    .flat()
+    .map((id: Id) => tree[id].contents)
+    .flat() as MessageContent[];
+  const collected = groupBy(contents, (content: MessageContent) => {
+    switch (content.kind) {
+      case "reaction":
+        return `reaction-${content.emoji}`;
+        break;
+      case "image":
+        return `image-${content.uri}`;
+        break;
+      default:
+        return content.kind;
     }
   });
-  return <More>{childEvents.flat().length} more:</More>;
+
+  const iconified = Object.values(collected)
+    .sort((a, b) => b.length - a.length)
+    .map((contents: MessageContent[], i: number) => {
+      switch (contents[0].kind) {
+        case "reaction":
+          return (
+            <span role="img" key={i}>
+              {contents[0].emoji}
+              {contents.length > 1 && ` (${contents.length})`}
+            </span>
+          );
+        case "highlight":
+          return (
+            <span role="img" key={i}>
+              <BorderColor />
+              {contents.length > 1 && ` (${contents.length})`}
+            </span>
+          );
+        case "markdown":
+          return (
+            <span role="img" key={i}>
+              <MessageIcon />
+              {` (${contents.length}) more`}
+            </span>
+          );
+        case "image":
+          return (
+            <span role="img" key={i}>
+              <img src={contents[0].uri} />
+            </span>
+          );
+      }
+    });
+  return <More>{iconified}</More>;
 };
 
 export default MoreReplies;

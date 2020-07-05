@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Message, Embellishment, SagaEvent } from "../../types/events";
+import {
+  Message,
+  Embellishment,
+  SagaEvent,
+  Clusters,
+} from "../../types/events";
 import Content from "./Content";
 import { purple_primary } from "../../colors";
 
@@ -35,7 +40,7 @@ const filterEmbellishmentsByContentIdx = (
 export interface BubbleProps {
   message: Message;
   mode: BubbleMode;
-  childEvents: clusteredIDs;
+  childEvents: Clusters;
   depth: number;
 }
 

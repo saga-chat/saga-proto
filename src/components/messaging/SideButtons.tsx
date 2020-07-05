@@ -54,6 +54,7 @@ const SideButtons: React.FC<SideButtonsProps> = ({
         </>
       ) : (
         <>
+          {/* TODO: hide if not my message */}
           <Tooltip title="edit" TransitionComponent={Zoom}>
             <IconButton>
               <Edit />

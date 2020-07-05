@@ -17,7 +17,7 @@ const buildTree = (events: SagaEvent[]): [idToEvent, Clusters] => {
       }
     }
 
-    if (!evt.parent) {
+    if (evt.parent === null) {
       treeTop.push(evt.id);
     }
   }

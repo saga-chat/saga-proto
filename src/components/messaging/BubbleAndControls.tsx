@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Embellishment, Clustered } from "../../types/events";
+import { Embellishment, Clustered, Message } from "../../types/events";
 import { BubbleProps } from "./Bubble";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
@@ -8,6 +8,9 @@ import MoreReplies from "./MoreReplies";
 import Cluster, { clusterSubstantives } from "./Cluster";
 import { idToEvent } from "../../types/utils/buildTree";
 import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
+import { reduceRight, takeRight, difference } from "lodash";
+
+export const MAX_PREVIEW_ELEMS = 5;
 
 const BubbleControlsDiv = styled.div<any>`
   margin-top: 5px;
@@ -33,7 +36,23 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   if (!isSubstantiveMessage(message)) {
     return <pre>message has no substance!</pre>;
   }
-  // TODO: partition child events into more... and shown
+  const substantiveChildren = childEvents.map((cluster: Clustered) =>
+    clusterSubstantives(cluster, tree)
+  );
+  const lastNSubstantives = reduceRight(
+    substantiveChildren,
+    (cur: any, messages: Message[]) => {
+      const taken = takeRight(messages, MAX_PREVIEW_ELEMS - cur.elems);
+      return {
+        elems: cur.elems + taken.length,
+        clusters: [taken.map((t) => t.id), ...cur.clusters],
+      };
+    },
+    { elems: 0, clusters: [] }
+  );
+  const truncated = childEvents.map((cluster: Clustered, i: number) =>
+    difference(cluster, lastNSubstantives.clusters[i])
+  );
   return (
     <div>
       <BubbleControlsDiv
@@ -54,13 +73,13 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           onReplyClick={console.log}
         />
       </BubbleControlsDiv>
-      {childEvents.length > 0 && <MoreReplies childEvents={childEvents} />}
+      {truncated.flat().length > 0 && (
+        <MoreReplies tree={tree} childEvents={truncated} />
+      )}
       <div style={{ paddingLeft: "1em" }}>
-        {childEvents.map((cluster: Clustered, i: number) =>
-          clusterSubstantives(cluster, tree).length > 0 ? (
-            <Cluster key={i} cluster={cluster} tree={tree} depth={depth + 1} />
-          ) : null
-        )}
+        {lastNSubstantives.clusters.map((cluster: Clustered, i: number) => (
+          <Cluster key={i} cluster={cluster} tree={tree} depth={depth + 1} />
+        ))}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const clusterIDs = (events: idToEvent, seed: Id): Clusters => {
     cluster = [prev, ...cluster];
     prev = events[prev].below;
   }
-  return transform(
+  const clustered = transform(
     cluster,
     (clustered: Clusters, current: Id) => {
       if (clustered.length === 0) {
@@ -28,6 +28,8 @@ const clusterIDs = (events: idToEvent, seed: Id): Clusters => {
     },
     []
   );
+
+  return clustered;
 };
 
 export default clusterIDs;

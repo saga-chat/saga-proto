@@ -37,12 +37,15 @@ const Cluster: React.FC<{
   depth: number;
 }> = ({ cluster, tree, depth }) => {
   const substantives = clusterSubstantives(cluster, tree);
+  if (substantives.length === 0) {
+    return null;
+  }
   return (
     <ClusterDiv>
       <CreatorDiv>{tree[cluster[0]].creator}</CreatorDiv>
       {substantives.map((evt: Message, j: number) => {
-        // to get embellishments, filter children
         const childEvents = evt.children || [];
+        // TODO: profile pic
         return (
           <BubbleAndControls
             key={j}
