@@ -9,11 +9,9 @@ const MoreText = styled.div`
   color: grey;
 `;
 
-// TODO: collect
-
-const MembershipBroadcast: React.FC<{ replies: (Message | Embellishment)[] }> = ({
-  replies,
-}) => {
+const MembershipBroadcast: React.FC<{
+  replies: (Message | Embellishment)[];
+}> = ({ replies }) => {
   return <pre>unaccounted for</pre>;
 };
 

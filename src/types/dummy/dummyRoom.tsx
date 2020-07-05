@@ -62,10 +62,4 @@ const dummyRoom: Room = {
   lastTyping: {},
 };
 
-// TODO: images, reactions, embellishment ranges
-// membership events
-// time separators
-// member profile info (online status, avatar)
-// typing status
-// read status
 export default dummyRoom;
