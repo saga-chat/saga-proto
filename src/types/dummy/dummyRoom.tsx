@@ -3,14 +3,17 @@ import uniqid from "uniqid";
 import makeChain from "./makeChain";
 import makeMessage from "./makeMessage";
 import makeParentAndChildren from "./makeParentAndChildren";
-import correctBelowChain from "./correctBelowChain";
 import reactToMessage from "./reactToMessage";
+import dummyMeId from "./dummyMe";
+import dummyUsers from "./dummyUsers";
 
-const veryFirst = makeMessage("max", "**Intro to Saga**", null, null);
-const hello = makeMessage("max", "Hello!", null, veryFirst.id);
-const helloReaction = reactToMessage("max", hello, null, "😋", null);
+const dummyUserIDs = Object.keys(dummyUsers);
+
+const veryFirst = makeMessage(dummyMeId, "**Intro to Saga**", null, null);
+const hello = makeMessage(dummyMeId, "Hello!", null, veryFirst.id);
+const helloReaction = reactToMessage(dummyMeId, hello, null, "😋", null);
 const chain = makeChain(
-  "max",
+  dummyMeId,
   [
     "Welcome to saga!",
     "here's a quick tour of all the features",
@@ -22,24 +25,32 @@ const chain = makeChain(
   hello.id
 );
 const parentAndChild = makeParentAndChildren(
-  "max",
+  dummyMeId,
   "you can reply to stuff!",
-  [makeMessage("max", "hello from below!", null, null)],
+  [makeMessage(dummyMeId, "hello from below!", null, null)],
   null,
   chain[chain.length - 1].id
 );
 
 const adaReplies = makeChain(
-  "ada",
+  dummyUserIDs[0],
   ["Woah!", "that's really cool!", "what else can it do?"],
   null,
   parentAndChild[0].id
 );
 
 const maxReplies = makeChain(
-  "max",
+  dummyMeId,
   ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
   adaReplies[1].id,
+  null
+);
+
+const maxReplyReaction = reactToMessage(
+  dummyUserIDs[2],
+  maxReplies[5] as any,
+  null,
+  "❤️",
   null
 );
 const events = [
@@ -50,16 +61,16 @@ const events = [
   ...parentAndChild,
   ...adaReplies,
   ...maxReplies,
+  maxReplyReaction,
 ];
 
 const dummyRoom: Room = {
-  creator: "max",
+  creator: dummyMeId,
   created: Date.now(),
   id: uniqid(),
-  members: ["max", "you", "ada"],
+  members: { [dummyMeId]: { id: dummyMeId, online: true, lastTyping: null } },
   name: "Telescope emoji",
   events,
-  lastTyping: {},
 };
 
 export default dummyRoom;

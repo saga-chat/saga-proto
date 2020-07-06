@@ -9,7 +9,6 @@ export default (
   parent: string | null,
   below: string | null
 ): SagaEvent[] => {
-  const ids = children.map(() => uniqid());
   const parentID = uniqid();
   const parentMessage = makeMessage(
     creatorID,

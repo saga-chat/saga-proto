@@ -5,7 +5,10 @@ export interface Evt extends Entity {
   seen_by: userid[];
   below: Id | null;
   parent: Id | null;
-  children?: Clusters;
+}
+
+export interface TreeEvt extends Evt {
+  children: Clusters;
 }
 
 interface Markdown {

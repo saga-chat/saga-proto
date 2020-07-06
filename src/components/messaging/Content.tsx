@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as React from "react";
-import { MessageContent, Embellishment } from "../../types/events";
+import { MessageContent } from "../../types/events";
 
 const TextBody = styled.div`
   font-family: "Inter", sans-serif;
@@ -10,8 +10,8 @@ const TextBody = styled.div`
 
 const Content: React.FC<{
   content: MessageContent;
-  embellishments: Embellishment[];
-}> = ({ content, embellishments }) => {
+  childContent: MessageContent[];
+}> = ({ content, childContent }) => {
   if (content.kind === "markdown") {
     return <TextBody>{content.contents}</TextBody>;
   } else if (content.kind === "image") {

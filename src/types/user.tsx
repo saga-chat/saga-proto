@@ -1,8 +1,13 @@
+import { Id } from "./entity";
+
 export interface User {
   created: number;
-  id: string;
+  id: Id;
   avatar: string;
   username: string;
   display_name: string;
-  rooms: string;
+}
+
+export interface LocalUser extends User {
+  rooms: Id[];
 }

@@ -3,11 +3,12 @@ import {
   SubstantiveContent,
   MessageContent,
   SagaEvent,
+  TreeEvt,
 } from "../events";
 
-const isSubstantiveMessage = (evt: SagaEvent) =>
-  evt.kind === "message" &&
-  evt.contents.some(
+const isSubstantiveMessage = (evt: TreeEvt) =>
+  (evt as any).kind === "message" &&
+  (evt as any).contents.some(
     ({ kind }: MessageContent) => SubstantiveContent.indexOf(kind) > -1
   );
 

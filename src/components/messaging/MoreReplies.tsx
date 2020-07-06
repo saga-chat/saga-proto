@@ -32,10 +32,11 @@ const More = styled.div`
   }
 `;
 
-const MoreReplies: React.FC<{ childEvents: Clusters; tree: idToEvent }> = ({
-  childEvents,
-  tree,
-}) => {
+const MoreReplies: React.FC<{
+  childEvents: Clusters;
+  tree: idToEvent;
+  onClick(): void;
+}> = ({ childEvents, tree, onClick }) => {
   const contents = childEvents
     .flat()
     .map((id: Id) => tree[id].contents)
@@ -61,14 +62,14 @@ const MoreReplies: React.FC<{ childEvents: Clusters; tree: idToEvent }> = ({
           return (
             <span role="img" key={i}>
               {contents[0].emoji}
-              {contents.length > 1 && ` (${contents.length})`}
+              {` (${contents.length})`}
             </span>
           );
         case "highlight":
           return (
             <span role="img" key={i}>
               <BorderColor />
-              {contents.length > 1 && ` (${contents.length})`}
+              {` (${contents.length})`}
             </span>
           );
         case "markdown":
@@ -86,7 +87,7 @@ const MoreReplies: React.FC<{ childEvents: Clusters; tree: idToEvent }> = ({
           );
       }
     });
-  return <More>{iconified}</More>;
+  return <More onClick={onClick}>{iconified}</More>;
 };
 
 export default MoreReplies;

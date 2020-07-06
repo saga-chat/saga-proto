@@ -1,14 +1,19 @@
-import Entity from "./entity";
+import Entity, { Id } from "./entity";
 import { SagaEvent } from "./events";
 
 interface ILastTyping {
-  parent: string;
-  below: string;
+  parent: Id;
+  below: Id;
   time: number;
 }
+
+export interface RoomMember {
+  id: Id;
+  online: boolean;
+  lastTyping: ILastTyping | null;
+}
 export interface Room extends Entity {
-  members: string[];
+  members: { [id: string]: RoomMember };
   name: string | null;
   events: SagaEvent[];
-  lastTyping: Record<string, ILastTyping>;
 }
