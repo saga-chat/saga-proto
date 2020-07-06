@@ -63,7 +63,7 @@ const Cluster: React.FC<{
         {knownUsers[tree[cluster[0]].creator].display_name}
       </CreatorDiv>
       {substantives.map((evt: TreeEvt, j: number) => {
-        const childEvents = evt.children || [];
+        const childEvents = evt.children;
         return (
           <div
             key={j}

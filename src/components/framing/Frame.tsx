@@ -26,7 +26,7 @@ const Frame: React.FC = () => {
   const [tree, topClusters] = buildTree(events);
   const [currentParent, setCurrentParent] = React.useState<string | null>(null);
   const currentClusters =
-    currentParent === null ? topClusters : tree[currentParent].children || [];
+    currentParent === null ? topClusters : tree[currentParent].children;
   const currentDepth = getCurrentDepth(currentParent, tree);
   return (
     <div>
