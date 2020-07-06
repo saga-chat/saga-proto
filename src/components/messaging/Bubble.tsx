@@ -30,6 +30,7 @@ const BubbleDiv = styled.div<any>`
     " 15px " +
     (mode === BubbleMode.top || mode === BubbleMode.middle ? "5px" : "15px")};
   margin: 0;
+  opacity: ${({ depth }: any) => 100 - 20 * depth}%;
 `;
 
 const filterEmbellishmentsByContentIdx = (
@@ -46,12 +47,21 @@ export interface BubbleProps {
 
 // TODO: hover to show precise time?
 // TODO: make images borderless (conditional padding)
-const Bubble: React.FC<BubbleProps> = ({ message, mode, childEvents }) => {
+const Bubble: React.FC<BubbleProps> = ({
+  message,
+  mode,
+  childEvents,
+  depth,
+}) => {
   const { contents } = message;
   const renderedContent = contents.map((content, index) => (
     <Content key={index} content={content} embellishments={[]} />
   ));
-  return <BubbleDiv mode={mode}>{renderedContent}</BubbleDiv>;
+  return (
+    <BubbleDiv mode={mode} depth={depth}>
+      {renderedContent}
+    </BubbleDiv>
+  );
 };
 
 export default Bubble;
