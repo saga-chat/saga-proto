@@ -2,8 +2,12 @@
 
 ## Todo
 
-- [ ] member profile info (online status, avatar)
-- [ ] Conversation router (future: tiler)
+- [x] member profile info (online status, avatar)
+- [ ] fill dummy members array w various statuses
+- [x] Conversation router (future: tiler)
+- [ ] proper scrolling-to when back pressed, and flashing the line it jumped to
+- [ ] deprecate global clustering? make children array default?
+- [ ] global typecheck
 - [ ] images in bubble
 - [ ] embellishment ranges and selector
 - [ ] reaction picker (always on, no highlight needed)
