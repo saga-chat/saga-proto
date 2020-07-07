@@ -3,12 +3,17 @@ import { idToEvent } from "./buildTree";
 import { Id } from "../entity";
 import { transform } from "lodash";
 
-const clusterIDs = (events: idToEvent, seed: Id): Clusters => {
-  let cluster: Id[] = [seed];
-  let prev = events[seed].below;
-  while (prev) {
-    cluster = [prev, ...cluster];
-    prev = events[prev].below;
+const clusterIDs = (events: idToEvent, seed: Id, subset?: Id[]): Clusters => {
+  let cluster: Id[];
+  if (subset === undefined) {
+    cluster = [seed];
+    let prev = events[seed].below;
+    while (prev) {
+      cluster = [prev, ...cluster];
+      prev = events[prev].below;
+    }
+  } else {
+    cluster = subset;
   }
   const clustered = transform(
     cluster,

@@ -6,6 +6,7 @@ const TextBody = styled.div`
   font-family: "Inter", sans-serif;
   font-weight: 300;
   font-size: 15px;
+  padding: 6px 12px;
 `;
 
 const Content: React.FC<{

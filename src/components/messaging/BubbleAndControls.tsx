@@ -5,7 +5,8 @@ import {
   Clustered,
   Message,
   Clusters,
-  TreeEvt,
+  ChildMap,
+  SagaEvent,
 } from "../../types/events";
 import { BubbleProps } from "./Bubble";
 import Bubble from "./Bubble";
@@ -16,6 +17,7 @@ import { idToEvent } from "../../types/utils/buildTree";
 import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { reduceRight, takeRight, difference } from "lodash";
 import { Id } from "../../types/entity";
+import clusterIDs from "../../types/utils/clusterIDs";
 
 export const MAX_PREVIEW_ELEMS = 5;
 export const MAX_DEPTH = 3;
@@ -33,6 +35,7 @@ const filterEmbellishmentsByContentIdx = (
 
 type BubbleAndControlsProps = BubbleProps & {
   tree: idToEvent;
+  childMap: ChildMap;
   onPush(id: Id): void;
 };
 const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
@@ -42,32 +45,29 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   depth,
   tree,
   onPush,
+  childMap,
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-  if (!isSubstantiveMessage(message as TreeEvt)) {
+  if (!isSubstantiveMessage(message, childMap)) {
     return <pre>message has no substance!</pre>;
   }
-  const substantiveChildren = childEvents.map((cluster: Clustered) =>
-    clusterSubstantives(cluster, tree)
-  );
+  const substantiveChildren = clusterSubstantives(
+    childEvents,
+    tree,
+    childMap
+  ).map(({ id }: SagaEvent) => id);
   const lastNSubstantives =
-    depth > MAX_DEPTH
-      ? { clusters: substantiveChildren.map(() => []) as Clusters }
-      : reduceRight(
-          substantiveChildren,
-          (cur: any, messages: Message[]) => {
-            const taken = takeRight(messages, MAX_PREVIEW_ELEMS - cur.elems);
-            return {
-              elems: cur.elems + taken.length,
-              clusters: [taken.map((t) => t.id), ...cur.clusters],
-            };
-          },
-          { elems: 0, clusters: [] as Clusters }
-        );
-  const truncated = childEvents.map((cluster: Clustered, i: number) =>
-    difference(cluster, lastNSubstantives.clusters[i])
-  );
+    depth > MAX_DEPTH ? [] : takeRight(substantiveChildren, MAX_PREVIEW_ELEMS);
+  const truncated = difference(childEvents, lastNSubstantives);
+  const clustering =
+    lastNSubstantives.length > 0
+      ? clusterIDs(
+          tree,
+          lastNSubstantives[lastNSubstantives.length - 1],
+          lastNSubstantives
+        )
+      : [];
   return (
     <div style={{ display: "inline-block", flexGrow: 1 }}>
       <BubbleControlsDiv
@@ -88,7 +88,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           onReplyClick={console.log}
         />
       </BubbleControlsDiv>
-      {truncated.flat().length > 0 && (
+      {truncated.length > 0 && (
         <MoreReplies
           tree={tree}
           childEvents={truncated}
@@ -96,13 +96,14 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
         />
       )}
       <div style={{ paddingLeft: "1em" }}>
-        {lastNSubstantives.clusters.map((cluster: Clustered, i: number) => (
+        {clustering.map((cluster: Clustered, i: number) => (
           <Cluster
             key={i}
-            cluster={cluster}
+            ids={cluster}
             tree={tree}
             depth={depth + 1}
             onPush={onPush}
+            childMap={childMap}
           />
         ))}
       </div>

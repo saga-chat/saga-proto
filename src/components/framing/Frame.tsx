@@ -23,11 +23,10 @@ const Frame: React.FC = () => {
   const appData = React.useContext(DummyAppDataContext);
   const room = appData.knownRooms[appData.myRooms[0]];
   const { events } = room;
-  const [tree, topClusters] = buildTree(events);
+  const [tree, treeTop, childMap] = buildTree(events);
   const [currentParent, setCurrentParent] = React.useState<string | null>(null);
-  const currentClusters =
-    currentParent === null ? topClusters : tree[currentParent].children;
   const currentDepth = getCurrentDepth(currentParent, tree);
+  const currentIds = currentParent !== null ? childMap[currentParent] : treeTop;
   return (
     <div>
       {currentParent !== null && (
@@ -43,8 +42,9 @@ const Frame: React.FC = () => {
       <Conversation
         room={room}
         tree={tree}
-        clusters={currentClusters}
+        ids={currentIds}
         onPush={setCurrentParent}
+        childMap={childMap}
       />
     </div>
   );

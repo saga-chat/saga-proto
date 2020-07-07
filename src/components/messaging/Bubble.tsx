@@ -8,6 +8,7 @@ import {
 } from "../../types/events";
 import Content from "./Content";
 import { purple_primary } from "../../colors";
+import { Id } from "../../types/entity";
 
 export enum BubbleMode {
   top,
@@ -21,7 +22,6 @@ const BubbleDiv = styled.div<any>`
   display: inline-block;
   background-color: ${purple_primary};
   color: #ffffff;
-  padding: 6px 12px;
   border-radius: ${({ mode }: any) =>
     (mode === BubbleMode.bottom || mode === BubbleMode.middle
       ? "5px"
@@ -41,7 +41,7 @@ const filterEmbellishmentsByContentIdx = (
 export interface BubbleProps {
   message: Message;
   mode: BubbleMode;
-  childEvents: Clusters;
+  childEvents: Id[];
   depth: number;
 }
 
@@ -55,7 +55,7 @@ const Bubble: React.FC<BubbleProps> = ({
 }) => {
   const { contents } = message;
   const renderedContent = contents.map((content, index) => (
-    <Content key={index} content={content} embellishments={[]} />
+    <Content key={index} content={content} />
   ));
   return (
     <BubbleDiv mode={mode} depth={depth}>

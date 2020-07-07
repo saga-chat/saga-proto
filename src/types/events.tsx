@@ -1,14 +1,12 @@
 import Entity, { Id, userid } from "./entity";
 export type Clustered = Id[];
 export type Clusters = Clustered[];
+
+export type ChildMap = { [id: string]: Id[] };
 export interface Evt extends Entity {
   seen_by: userid[];
   below: Id | null;
   parent: Id | null;
-}
-
-export interface TreeEvt extends Evt {
-  children: Clusters;
 }
 
 interface Markdown {

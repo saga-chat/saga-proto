@@ -33,12 +33,11 @@ const More = styled.div`
 `;
 
 const MoreReplies: React.FC<{
-  childEvents: Clusters;
+  childEvents: Id[];
   tree: idToEvent;
   onClick(): void;
 }> = ({ childEvents, tree, onClick }) => {
   const contents = childEvents
-    .flat()
     .map((id: Id) => tree[id].contents)
     .flat() as MessageContent[];
   const collected = groupBy(contents, (content: MessageContent) => {

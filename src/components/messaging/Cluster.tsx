@@ -5,7 +5,7 @@ import {
   Message,
   SagaEvent,
   Clustered,
-  TreeEvt,
+  ChildMap,
 } from "../../types/events";
 import { idToEvent } from "../../types/utils/buildTree";
 import BubbleAndControls from "./BubbleAndControls";
@@ -42,28 +42,33 @@ const Propic = styled.div<any>`
   background-repeat: no-repeat;
 `;
 
-export const clusterSubstantives = (cluster: Clustered, tree: idToEvent) =>
-  cluster.map((id: Id) => tree[id]).filter(isSubstantiveMessage) as TreeEvt[];
+export const clusterSubstantives = (
+  cluster: Id[],
+  tree: idToEvent,
+  childMap: ChildMap
+) =>
+  cluster
+    .map((id: Id) => tree[id])
+    .filter((evt: SagaEvent) => isSubstantiveMessage(evt, childMap));
 
 const Cluster: React.FC<{
-  cluster: Clustered;
+  ids: Id[];
   tree: idToEvent;
   onPush(id: Id): void;
   depth: number;
-}> = ({ cluster, tree, depth, onPush }) => {
+  childMap: ChildMap;
+}> = ({ ids, tree, depth, onPush, childMap }) => {
   const { knownUsers } = React.useContext(DummyAppDataContext);
-  const substantives = clusterSubstantives(cluster, tree);
+  const substantives = clusterSubstantives(ids, tree, childMap);
   if (substantives.length === 0) {
     return null;
   }
   const buffer = <div style={{ width: PROPIC_SIZE }} />;
   return (
     <ClusterDiv>
-      <CreatorDiv>
-        {knownUsers[tree[cluster[0]].creator].display_name}
-      </CreatorDiv>
-      {substantives.map((evt: TreeEvt, j: number) => {
-        const childEvents = evt.children;
+      <CreatorDiv>{knownUsers[tree[ids[0]].creator].display_name}</CreatorDiv>
+      {substantives.map((evt: SagaEvent, j: number) => {
+        const childEvents = childMap[evt.id];
         return (
           <div
             key={j}
@@ -81,12 +86,13 @@ const Cluster: React.FC<{
               depth={depth}
               tree={tree}
               onPush={onPush}
+              childMap={childMap}
               mode={
-                cluster.length === 1
+                ids.length === 1
                   ? BubbleMode.singleton
                   : j === 0
                   ? BubbleMode.top
-                  : j === cluster.length - 1
+                  : j === ids.length - 1
                   ? BubbleMode.bottom
                   : BubbleMode.middle
               }
