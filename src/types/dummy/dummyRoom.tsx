@@ -6,6 +6,7 @@ import makeParentAndChildren from "./makeParentAndChildren";
 import reactToMessage from "./reactToMessage";
 import dummyMeId from "./dummyMe";
 import dummyUsers from "./dummyUsers";
+import makeImage from "./makeImage";
 
 const dummyUserIDs = Object.keys(dummyUsers);
 
@@ -15,7 +16,7 @@ const helloReaction = reactToMessage(dummyMeId, hello, null, "😋", null);
 const chain = makeChain(
   dummyMeId,
   [
-    "Welcome to saga!",
+    "Welcome to `saga`!",
     "here's a quick tour of all the features",
     "saga was built on the **vision** that chat should work like a notebook",
     "you can read more about this vision at https://a9.io/glue-comic",
@@ -41,7 +42,7 @@ const adaReplies = makeChain(
 
 const maxReplies = makeChain(
   dummyMeId,
-  ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
+  ["# the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
   adaReplies[1].id,
   null
 );
@@ -53,6 +54,22 @@ const maxReplyReaction = reactToMessage(
   "❤️",
   null
 );
+
+const imgFirst = makeImage(
+  dummyUserIDs[1],
+  "https://d2w9rnfcy7mm78.cloudfront.net/6647576/original_68db1c6470569c7d3f47de34dc7ddf81.jpg?1585586959?bc=0",
+  null,
+  adaReplies[adaReplies.length - 1].id
+);
+
+const imgSnd = makeImage(
+  dummyUserIDs[2],
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_New_Mexico.svg/320px-Flag_of_New_Mexico.svg.png",
+  imgFirst.id,
+  null,
+  "look at mee im the state of new mexico hehehe"
+);
+
 const events = [
   veryFirst,
   hello,
@@ -62,6 +79,8 @@ const events = [
   ...adaReplies,
   ...maxReplies,
   maxReplyReaction,
+  imgFirst,
+  imgSnd,
 ];
 
 const dummyRoom: Room = {

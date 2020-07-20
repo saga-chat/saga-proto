@@ -26,6 +26,10 @@ const BubbleControlsDiv = styled.div<any>`
   margin-left: 5px;
   position: relative;
   width: 100%;
+  border-radius: 5px;
+  :hover {
+    /* background-color: rgba(0, 0, 200, 0.05); */
+  }
 `;
 
 const filterEmbellishmentsByContentIdx = (
@@ -73,8 +77,8 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
       <BubbleControlsDiv
         onMouseOver={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
-        onMouseDown={() => setSelected(1)}
-        onMouseUp={() => setSelected(null)}
+        // onMouseDown={() => setSelected(1)}
+        // onMouseUp={() => setSelected(null)}
       >
         <Bubble
           message={message}

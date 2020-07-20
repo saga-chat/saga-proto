@@ -29,7 +29,10 @@ const BubbleDiv = styled.div<any>`
     " 15px " +
     " 15px " +
     (mode === BubbleMode.top || mode === BubbleMode.middle ? "5px" : "15px")};
+  box-sizing: border-box;
+  overflow: hidden;
   margin: 0;
+  padding: 0;
   opacity: ${({ depth }: any) => 100 - 20 * depth}%;
 `;
 
@@ -55,7 +58,7 @@ const Bubble: React.FC<BubbleProps> = ({
 }) => {
   const { contents } = message;
   const renderedContent = contents.map((content, index) => (
-    <Content key={index} content={content} />
+    <Content key={index} content={content} childContent={[]} />
   ));
   return (
     <BubbleDiv mode={mode} depth={depth}>

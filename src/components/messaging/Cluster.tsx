@@ -15,7 +15,7 @@ import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
 
 const ClusterDiv = styled.div`
-  display: inline-block;
+  display: block;
   padding: 0;
   margin: 5px;
   width: 100%;

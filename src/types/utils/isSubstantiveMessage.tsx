@@ -11,6 +11,6 @@ const isSubstantiveMessage = (evt: SagaEvent, childMap: ChildMap) =>
     (evt as any).contents.some(
       ({ kind }: MessageContent) => SubstantiveContent.indexOf(kind) > -1
     )) ||
-  childMap[evt.id].length > 0;
+  childMap[evt.id].length > 0; // if it has a child it's substantive
 
 export default isSubstantiveMessage;

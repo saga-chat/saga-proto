@@ -17,7 +17,7 @@ const Conversation: React.FC<{
   // TODO: cluster does not support non messages!
   const clusters = clusterIDs(tree, ids[ids.length - 1]);
   return (
-    <div>
+    <div style={{ height: "100%", overflow: "auto" }}>
       {clusters.map((cluster: Clustered, i: number) => (
         <Cluster
           childMap={childMap}
