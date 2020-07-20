@@ -7,6 +7,10 @@ import { Id } from "../../types/entity";
 import BigChip from "./BigChip";
 import { AppData } from "../../types/appdata";
 import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import Bubble, { BubbleMode } from "../messaging/Bubble";
+import { Message } from "../../types/events";
+import { Propic, CreatorDiv } from "../messaging/Cluster";
+import { purple_primary } from "../../colors";
 
 const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
   id !== null && tree[id].parent !== null
@@ -19,6 +23,23 @@ const ReplyBreadcrumb = styled.div`
   margin-bottom: 1em;
 `;
 
+const BackButton = styled.button`
+  outline: none;
+  color: ${purple_primary};
+  background: none;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1em;
+  cursor: pointer;
+  transition: 0.2s;
+  opacity: 1;
+  :hover {
+    opacity: 0.8;
+    transition: 0.2s;
+  }
+`;
+
 const Frame: React.FC = () => {
   const appData = React.useContext(DummyAppDataContext);
   const room = appData.knownRooms[appData.myRooms[0]];
@@ -27,15 +48,26 @@ const Frame: React.FC = () => {
   const [currentParent, setCurrentParent] = React.useState<string | null>(null);
   const currentDepth = getCurrentDepth(currentParent, tree);
   const currentIds = currentParent !== null ? childMap[currentParent] : treeTop;
+  const parentUser =
+    currentParent !== null
+      ? appData.knownUsers[tree[currentParent].creator]
+      : null;
   return (
     <div>
       {currentParent !== null && (
         <ReplyBreadcrumb>
-          <BigChip
-            onPush={setCurrentParent}
-            message={tree[currentParent] as any}
+          <BackButton
+            onClick={() => setCurrentParent(tree[currentParent].parent)}
+          >
+            {"< back"}
+          </BackButton>
+          <CreatorDiv>{parentUser?.display_name}</CreatorDiv>
+          <Propic uri={parentUser?.avatar} />
+          <Bubble
+            mode={BubbleMode.singleton}
+            depth={0}
             childEvents={[]}
-            room={room}
+            message={tree[currentParent] as Message}
           />
         </ReplyBreadcrumb>
       )}

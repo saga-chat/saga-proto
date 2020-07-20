@@ -22,7 +22,7 @@ const ClusterDiv = styled.div`
   max-width: 700px;
 `;
 
-const CreatorDiv = styled.div`
+export const CreatorDiv = styled.div`
   font-family: "Inter", sans-serif;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.75);
@@ -32,7 +32,7 @@ const CreatorDiv = styled.div`
 
 const PROPIC_SIZE = "25px";
 
-const Propic = styled.div<any>`
+export const Propic = styled.div<any>`
   display: inline-block;
   width: ${PROPIC_SIZE};
   height: ${PROPIC_SIZE};
