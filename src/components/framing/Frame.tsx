@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as React from "react";
 import { Room } from "../../types/room";
 import buildTree, { idToEvent } from "../../types/utils/buildTree";
-import Conversation, { clusterSubstantives } from "../messaging/Conversation";
+import TreeView, { clusterSubstantives } from "../messaging/TreeView";
 import { Id } from "../../types/entity";
 import BigChip from "./BigChip";
 import { AppData } from "../../types/appdata";
@@ -17,6 +17,8 @@ import Tab from "@material-ui/core/Tab";
 import ChatBubble from "@material-ui/icons/ChatBubble";
 import EmojiEmoticons from "@material-ui/icons/EmojiEmotions";
 import Badge from "@material-ui/core/Badge";
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import isTerminalReaction from "../../types/utils/isTerminalReaction";
 
 const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
@@ -24,7 +26,7 @@ const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
     ? getCurrentDepth(tree[id].parent as any, tree) + 1
     : 0;
 
-const ReplyBreadcrumb = styled.div`
+const Breadcrumb = styled.div`
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
   padding: 1em;
   margin-bottom: 1em;
@@ -72,24 +74,28 @@ const Frame: React.FC = () => {
       ? currentIds.filter((id) => isTerminalReaction(id, tree, childMap))
       : [];
   return (
-    <div>
-      {currentParent !== null && (
-        <ReplyBreadcrumb>
-          <BackButton
-            onClick={() => setCurrentParent(tree[currentParent].parent)}
-          >
-            {"< back"}
-          </BackButton>
-          <CreatorDiv>{parentUser?.display_name}</CreatorDiv>
-          <Propic uri={parentUser?.avatar} />
-          <Bubble
-            mode={BubbleMode.singleton}
-            depth={0}
-            childEvents={[]}
-            message={tree[currentParent] as Message}
-          />
-        </ReplyBreadcrumb>
-      )}
+    <div style={{ display: "flex", flexFlow: "column", height: "100vh" }}>
+      <Breadcrumb>
+        {currentParent !== null ? (
+          <>
+            <BackButton
+              onClick={() => setCurrentParent(tree[currentParent].parent)}
+            >
+              {"< back"}
+            </BackButton>
+            <CreatorDiv>{parentUser?.display_name}</CreatorDiv>
+            <Propic uri={parentUser?.avatar} />
+            <Bubble
+              mode={BubbleMode.singleton}
+              depth={0}
+              childEvents={[]}
+              message={tree[currentParent] as Message}
+            />
+          </>
+        ) : (
+          <BackButton>{room.name}</BackButton>
+        )}
+      </Breadcrumb>
       {currentParent !== null && (
         <Tabs
           value={currentTab}
@@ -111,27 +117,33 @@ const Frame: React.FC = () => {
           />
         </Tabs>
       )}
-      {currentTab === 0 || currentParent === null ? (
-        <Conversation
-          room={room}
-          tree={tree}
-          ids={currentIds}
-          onPush={setCurrentParent}
-          childMap={childMap}
-          contentType={"SUBSTANTIVES"}
-        />
-      ) : null}
+      <div style={{ overflow: "auto", flex: 1 }}>
+        {currentTab === 0 || currentParent === null ? (
+          <TreeView
+            room={room}
+            tree={tree}
+            ids={currentIds}
+            onPush={setCurrentParent}
+            childMap={childMap}
+            contentType={"SUBSTANTIVES"}
+          />
+        ) : null}
 
-      {currentTab === 1 && (
-        <Conversation
-          room={room}
-          tree={tree}
-          ids={currentIds}
-          onPush={setCurrentParent}
-          childMap={childMap}
-          contentType={"REACTIONS"}
-        />
-      )}
+        {currentTab === 1 && (
+          <TreeView
+            room={room}
+            tree={tree}
+            ids={currentIds}
+            onPush={setCurrentParent}
+            childMap={childMap}
+            contentType={"REACTIONS"}
+          />
+        )}
+      </div>
+      <BottomNavigation showLabels={true}>
+        <BottomNavigationAction label="all" />
+        <BottomNavigationAction label="new" />
+      </BottomNavigation>
     </div>
   );
 };

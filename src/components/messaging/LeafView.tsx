@@ -6,16 +6,8 @@ import buildTree, { idToEvent } from "../../types/utils/buildTree";
 import Cluster from "./Cluster";
 import { Id } from "../../types/entity";
 import clusterIDs from "../../types/utils/clusterIDs";
-import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
-import isTerminalReaction from "../../types/utils/isTerminalReaction";
 
-export const clusterSubstantives = (
-  cluster: Id[],
-  tree: idToEvent,
-  childMap: ChildMap
-) => cluster.filter((id: Id) => isSubstantiveMessage(id, tree, childMap));
-
-const Conversation: React.FC<{
+const LeafView: React.FC<{
   room: Room;
   tree: idToEvent;
   ids: Id[];
@@ -24,13 +16,9 @@ const Conversation: React.FC<{
   contentType: "SUBSTANTIVES" | "REACTIONS";
 }> = ({ room, tree, ids, onPush, childMap, contentType }) => {
   // TODO: cluster does not support non messages!
-  const clusters = clusterIDs(tree, ids[ids.length - 1]).map((cluster) =>
-    contentType === "SUBSTANTIVES"
-      ? clusterSubstantives(cluster, tree, childMap)
-      : cluster.filter((id) => isTerminalReaction(id, tree, childMap))
-  );
+  const clusters = clusterIDs(tree, ids[ids.length - 1]);
   return (
-    <div style={{ height: "100%", overflow: "auto" }}>
+    <div>
       {clusters.map((cluster: Clustered, i: number) =>
         cluster.length > 0 ? (
           <Cluster
@@ -47,4 +35,4 @@ const Conversation: React.FC<{
   );
 };
 
-export default Conversation;
+export default LeafView;

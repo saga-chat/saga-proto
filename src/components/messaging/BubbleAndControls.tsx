@@ -18,7 +18,7 @@ import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { reduceRight, takeRight, difference } from "lodash";
 import { Id } from "../../types/entity";
 import clusterIDs from "../../types/utils/clusterIDs";
-import { clusterSubstantives } from "./Conversation";
+import { clusterSubstantives } from "./TreeView";
 
 export const MAX_PREVIEW_ELEMS = 5;
 export const MAX_DEPTH = 3;

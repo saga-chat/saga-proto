@@ -13,7 +13,7 @@ import { BubbleMode } from "./Bubble";
 import { Id } from "../../types/entity";
 import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
-import { clusterSubstantives } from "./Conversation";
+import { clusterSubstantives } from "./TreeView";
 
 const ClusterDiv = styled.div`
   display: block;

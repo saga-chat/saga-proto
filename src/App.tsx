@@ -24,7 +24,7 @@ const App: FC = () => {
     : "https://picsum.photos/48/48") as string;
 
   return (
-    <div>
+    <div style={{ overflow: "hidden" }}>
       <Frame />
     </div>
   );
