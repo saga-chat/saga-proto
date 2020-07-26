@@ -4,6 +4,7 @@ import "./App.css";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase";
 import firebaseConfig from "./firebase";
+import Frame from "./components/framing/Frame";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -22,7 +23,11 @@ const App: FC = () => {
     ? firebase.auth().currentUser!.photoURL
     : "https://picsum.photos/48/48") as string;
 
-  return <div>Use storybook!</div>;
+  return (
+    <div>
+      <Frame />
+    </div>
+  );
 };
 
 export default App;

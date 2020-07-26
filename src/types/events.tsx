@@ -26,6 +26,8 @@ export interface Range {
   start: number;
   end: number;
 }
+
+// renders as the content itself in "quote" form
 export interface Highlight extends Embellishment {
   range: Range | null;
   kind: "highlight";

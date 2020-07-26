@@ -13,6 +13,7 @@ import { BubbleMode } from "./Bubble";
 import { Id } from "../../types/entity";
 import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { clusterSubstantives } from "./Conversation";
 
 const ClusterDiv = styled.div`
   display: block;
@@ -42,15 +43,6 @@ export const Propic = styled.div<any>`
   background-repeat: no-repeat;
 `;
 
-export const clusterSubstantives = (
-  cluster: Id[],
-  tree: idToEvent,
-  childMap: ChildMap
-) =>
-  cluster
-    .map((id: Id) => tree[id])
-    .filter((evt: SagaEvent) => isSubstantiveMessage(evt, childMap));
-
 const Cluster: React.FC<{
   ids: Id[];
   tree: idToEvent;
@@ -59,16 +51,13 @@ const Cluster: React.FC<{
   childMap: ChildMap;
 }> = ({ ids, tree, depth, onPush, childMap }) => {
   const { knownUsers } = React.useContext(DummyAppDataContext);
-  const substantives = clusterSubstantives(ids, tree, childMap);
-  if (substantives.length === 0) {
-    return null;
-  }
   const buffer = <div style={{ width: PROPIC_SIZE }} />;
   return (
     <ClusterDiv>
       <CreatorDiv>{knownUsers[tree[ids[0]].creator].display_name}</CreatorDiv>
-      {substantives.map((evt: SagaEvent, j: number) => {
-        const childEvents = childMap[evt.id];
+      {ids.map((id: Id, j: number) => {
+        const evt = tree[id];
+        const childEvents = childMap[id];
         return (
           <div
             key={j}

@@ -4,8 +4,10 @@
 
 ```
 npm install
-npm run storybook
+npm start
 ```
+
+also `npm run storybook` is available.
 
 ## Todo
 

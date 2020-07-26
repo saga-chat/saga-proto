@@ -22,34 +22,38 @@ const Content: React.FC<{
   content: MessageContent;
   childContent: MessageContent[];
 }> = ({ content, childContent }) => {
-  if (content.kind === "markdown") {
-    return (
-      <TextBody>
-        <ReactMarkdown
-          source={content.contents}
-          disallowedTypes={["image", "imageReference", "heading"]}
-          unwrapDisallowed={true}
-          renderers={{ link: LinkStyled }}
+  switch (content.kind) {
+    case "markdown":
+      return (
+        <TextBody>
+          <ReactMarkdown
+            source={content.contents}
+            disallowedTypes={["image", "imageReference", "heading"]}
+            unwrapDisallowed={true}
+            renderers={{ link: LinkStyled }}
+          />
+        </TextBody>
+      );
+    case "image":
+      return (
+        <img
+          style={{
+            display: "block",
+            maxWidth: "100%",
+            width: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+            boxSizing: "border-box",
+          }}
+          src={content.uri}
+          loading="lazy"
         />
-      </TextBody>
-    );
-  } else if (content.kind === "image") {
-    return (
-      <img
-        style={{
-          display: "block",
-          maxWidth: "100%",
-          width: "100%",
-          maxHeight: "100%",
-          objectFit: "contain",
-          boxSizing: "border-box",
-        }}
-        src={content.uri}
-        loading="lazy"
-      />
-    );
+      );
+    case "reaction":
+      return <span>{content.emoji}</span>;
+    default:
+      return <pre>unimplemented</pre>;
   }
-  return <pre>unimplemented</pre>;
 };
 
 export default Content;

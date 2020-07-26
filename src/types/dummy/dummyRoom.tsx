@@ -40,11 +40,19 @@ const adaReplies = makeChain(
   parentAndChild[0].id
 );
 
+const adaReplyReaction = reactToMessage(
+  dummyUserIDs[3],
+  adaReplies[1] as any,
+  null,
+  "👍",
+  null
+);
+
 const maxReplies = makeChain(
   dummyMeId,
   ["# the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
   adaReplies[1].id,
-  null
+  adaReplyReaction.id
 );
 
 const maxReplyReaction = reactToMessage(
@@ -77,6 +85,7 @@ const events = [
   ...chain,
   ...parentAndChild,
   ...adaReplies,
+  adaReplyReaction,
   ...maxReplies,
   maxReplyReaction,
   imgFirst,

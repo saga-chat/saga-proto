@@ -12,12 +12,13 @@ import { BubbleProps } from "./Bubble";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
-import Cluster, { clusterSubstantives } from "./Cluster";
+import Cluster from "./Cluster";
 import { idToEvent } from "../../types/utils/buildTree";
 import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { reduceRight, takeRight, difference } from "lodash";
 import { Id } from "../../types/entity";
 import clusterIDs from "../../types/utils/clusterIDs";
+import { clusterSubstantives } from "./Conversation";
 
 export const MAX_PREVIEW_ELEMS = 5;
 export const MAX_DEPTH = 3;
@@ -53,14 +54,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
 }) => {
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-  if (!isSubstantiveMessage(message, childMap)) {
-    return <pre>message has no substance!</pre>;
-  }
-  const substantiveChildren = clusterSubstantives(
-    childEvents,
-    tree,
-    childMap
-  ).map(({ id }: SagaEvent) => id);
+  const substantiveChildren = clusterSubstantives(childEvents, tree, childMap);
   const lastNSubstantives =
     depth > MAX_DEPTH ? [] : takeRight(substantiveChildren, MAX_PREVIEW_ELEMS);
   const truncated = difference(childEvents, lastNSubstantives);

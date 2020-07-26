@@ -3,21 +3,38 @@ import * as React from "react";
 import messageDummy from "../types/dummy/dummyMessage";
 
 export const Top = () => (
-  <Bubble message={messageDummy} mode={BubbleMode.top} embellishments={[]} />
+  <Bubble
+    message={messageDummy}
+    mode={BubbleMode.top}
+    childEvents={[]}
+    depth={0}
+  />
 );
 export const Middle = () => (
-  <Bubble message={messageDummy} mode={BubbleMode.middle} embellishments={[]} />
+  <Bubble
+    message={messageDummy}
+    mode={BubbleMode.middle}
+    childEvents={[]}
+    depth={0}
+  />
 );
 export const Bottom = () => (
-  <Bubble message={messageDummy} mode={BubbleMode.bottom} embellishments={[]} />
+  <Bubble
+    message={messageDummy}
+    mode={BubbleMode.bottom}
+    childEvents={[]}
+    depth={0}
+  />
 );
 export const Singleton = () => (
   <Bubble
     message={messageDummy}
     mode={BubbleMode.singleton}
-    embellishments={[]}
+    childEvents={[]}
+    depth={0}
   />
 );
+
 export default {
   title: "Bubble",
   component: Bubble,

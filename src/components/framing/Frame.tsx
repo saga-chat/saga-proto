@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as React from "react";
 import { Room } from "../../types/room";
 import buildTree, { idToEvent } from "../../types/utils/buildTree";
-import Conversation from "../messaging/Conversation";
+import Conversation, { clusterSubstantives } from "../messaging/Conversation";
 import { Id } from "../../types/entity";
 import BigChip from "./BigChip";
 import { AppData } from "../../types/appdata";
@@ -11,6 +11,13 @@ import Bubble, { BubbleMode } from "../messaging/Bubble";
 import { Message } from "../../types/events";
 import { Propic, CreatorDiv } from "../messaging/Cluster";
 import { purple_primary } from "../../colors";
+
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import ChatBubble from "@material-ui/icons/ChatBubble";
+import EmojiEmoticons from "@material-ui/icons/EmojiEmotions";
+import Badge from "@material-ui/core/Badge";
+import isTerminalReaction from "../../types/utils/isTerminalReaction";
 
 const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
   id !== null && tree[id].parent !== null
@@ -52,6 +59,18 @@ const Frame: React.FC = () => {
     currentParent !== null
       ? appData.knownUsers[tree[currentParent].creator]
       : null;
+
+  const [currentTab, setCurrentTab] = React.useState(0);
+
+  const substantives =
+    currentParent !== null
+      ? clusterSubstantives(currentIds, tree, childMap)
+      : [];
+
+  const terminalReactions =
+    currentParent !== null
+      ? currentIds.filter((id) => isTerminalReaction(id, tree, childMap))
+      : [];
   return (
     <div>
       {currentParent !== null && (
@@ -71,13 +90,48 @@ const Frame: React.FC = () => {
           />
         </ReplyBreadcrumb>
       )}
-      <Conversation
-        room={room}
-        tree={tree}
-        ids={currentIds}
-        onPush={setCurrentParent}
-        childMap={childMap}
-      />
+      {currentParent !== null && (
+        <Tabs
+          value={currentTab}
+          onChange={(e: any, value: any) => setCurrentTab(value)}
+        >
+          <Tab
+            label={
+              <Badge badgeContent={substantives.length} color="primary">
+                <ChatBubble />
+              </Badge>
+            }
+          />
+          <Tab
+            label={
+              <Badge badgeContent={terminalReactions.length} color="primary">
+                <EmojiEmoticons />
+              </Badge>
+            }
+          />
+        </Tabs>
+      )}
+      {currentTab === 0 || currentParent === null ? (
+        <Conversation
+          room={room}
+          tree={tree}
+          ids={currentIds}
+          onPush={setCurrentParent}
+          childMap={childMap}
+          contentType={"SUBSTANTIVES"}
+        />
+      ) : null}
+
+      {currentTab === 1 && (
+        <Conversation
+          room={room}
+          tree={tree}
+          ids={currentIds}
+          onPush={setCurrentParent}
+          childMap={childMap}
+          contentType={"REACTIONS"}
+        />
+      )}
     </div>
   );
 };

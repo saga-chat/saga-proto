@@ -1,16 +1,17 @@
 import {
-  Message,
   SubstantiveContent,
   MessageContent,
   SagaEvent,
   ChildMap,
 } from "../events";
+import { idToEvent } from "./buildTree";
+import { Id } from "../entity";
 
-const isSubstantiveMessage = (evt: SagaEvent, childMap: ChildMap) =>
-  ((evt as any).kind === "message" &&
-    (evt as any).contents.some(
+const isSubstantiveMessage = (id: Id, tree: idToEvent, childMap: ChildMap) =>
+  ((tree[id] as any).kind === "message" &&
+    (tree[id] as any).contents.some(
       ({ kind }: MessageContent) => SubstantiveContent.indexOf(kind) > -1
     )) ||
-  childMap[evt.id].length > 0; // if it has a child it's substantive
+  childMap[id].length > 0; // if it has a child it's substantive
 
 export default isSubstantiveMessage;
