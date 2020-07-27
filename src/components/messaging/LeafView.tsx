@@ -6,17 +6,18 @@ import buildTree, { idToEvent } from "../../types/utils/buildTree";
 import Cluster from "./Cluster";
 import { Id } from "../../types/entity";
 import clusterIDs from "../../types/utils/clusterIDs";
+import getParentsWithNewChildren from "../../types/utils/getParentsWithNewChildren";
+import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
 
 const LeafView: React.FC<{
   room: Room;
   tree: idToEvent;
-  ids: Id[];
   onPush(id: Id): void;
   childMap: ChildMap;
-  contentType: "SUBSTANTIVES" | "REACTIONS";
-}> = ({ room, tree, ids, onPush, childMap, contentType }) => {
-  // TODO: cluster does not support non messages!
-  const clusters = clusterIDs(tree, ids[ids.length - 1]);
+}> = ({ room, tree, onPush, childMap }) => {
+  const appData = React.useContext(DummyAppDataContext);
+  const ids = getParentsWithNewChildren(tree, appData.me);
+  const clusters = clusterIDs(tree, ids[ids.length - 1], ids);
   return (
     <div>
       {clusters.map((cluster: Clustered, i: number) =>

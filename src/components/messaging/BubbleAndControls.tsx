@@ -14,11 +14,17 @@ import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
 import Cluster from "./Cluster";
 import { idToEvent } from "../../types/utils/buildTree";
-import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
 import { reduceRight, takeRight, difference } from "lodash";
 import { Id } from "../../types/entity";
 import clusterIDs from "../../types/utils/clusterIDs";
 import { clusterSubstantives } from "./TreeView";
+
+import CircleIcon from "@material-ui/icons/FiberManualRecord";
+import OutlinedCircleIcon from "@material-ui/icons/FiberManualRecordOutlined";
+import { IconButton, colors } from "@material-ui/core";
+import isUnread from "../../types/utils/isUnread";
+import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { purple_primary } from "../../colors";
 
 export const MAX_PREVIEW_ELEMS = 5;
 export const MAX_DEPTH = 3;
@@ -52,6 +58,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   onPush,
   childMap,
 }) => {
+  const appData = React.useContext(DummyAppDataContext);
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
   const substantiveChildren = clusterSubstantives(childEvents, tree, childMap);
@@ -66,6 +73,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           lastNSubstantives
         )
       : [];
+  const unread = isUnread(message, appData.me);
   return (
     <div style={{ display: "inline-block", flexGrow: 1 }}>
       <BubbleControlsDiv
@@ -80,6 +88,21 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           childEvents={childEvents}
           depth={depth}
         />
+        <div
+          style={{
+            visibility: unread || showControls ? "visible" : "hidden",
+            display: "inline-block",
+            verticalAlign: "top",
+          }}
+        >
+          <IconButton edge="end" size="small">
+            {unread ? (
+              <CircleIcon htmlColor={purple_primary} />
+            ) : (
+              <OutlinedCircleIcon htmlColor={purple_primary} />
+            )}
+          </IconButton>
+        </div>
         <SideButtons
           show={showControls}
           selected={selected}

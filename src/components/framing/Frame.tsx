@@ -16,10 +16,13 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import ChatBubble from "@material-ui/icons/ChatBubble";
 import EmojiEmoticons from "@material-ui/icons/EmojiEmotions";
+import InboxIcon from "@material-ui/icons/Inbox";
+import AccountTree from "@material-ui/icons/AccountTree";
 import Badge from "@material-ui/core/Badge";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import isTerminalReaction from "../../types/utils/isTerminalReaction";
+import LeafView from "../messaging/LeafView";
 
 const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
   id !== null && tree[id].parent !== null
@@ -63,6 +66,7 @@ const Frame: React.FC = () => {
       : null;
 
   const [currentTab, setCurrentTab] = React.useState(0);
+  const [currentView, setCurrentView] = React.useState(0);
 
   const substantives =
     currentParent !== null
@@ -73,6 +77,7 @@ const Frame: React.FC = () => {
     currentParent !== null
       ? currentIds.filter((id) => isTerminalReaction(id, tree, childMap))
       : [];
+
   return (
     <div style={{ display: "flex", flexFlow: "column", height: "100vh" }}>
       <Breadcrumb>
@@ -118,32 +123,45 @@ const Frame: React.FC = () => {
         </Tabs>
       )}
       <div style={{ overflow: "auto", flex: 1 }}>
-        {currentTab === 0 || currentParent === null ? (
-          <TreeView
+        {currentView === 0 ? (
+          currentTab === 0 || currentParent === null ? (
+            <TreeView
+              room={room}
+              tree={tree}
+              ids={currentIds}
+              onPush={setCurrentParent}
+              childMap={childMap}
+              contentType={"SUBSTANTIVES"}
+            />
+          ) : currentTab === 1 ? (
+            <TreeView
+              room={room}
+              tree={tree}
+              ids={currentIds}
+              onPush={setCurrentParent}
+              childMap={childMap}
+              contentType={"REACTIONS"}
+            />
+          ) : null
+        ) : (
+          <LeafView
             room={room}
             tree={tree}
-            ids={currentIds}
             onPush={setCurrentParent}
             childMap={childMap}
-            contentType={"SUBSTANTIVES"}
-          />
-        ) : null}
-
-        {currentTab === 1 && (
-          <TreeView
-            room={room}
-            tree={tree}
-            ids={currentIds}
-            onPush={setCurrentParent}
-            childMap={childMap}
-            contentType={"REACTIONS"}
           />
         )}
       </div>
-      <BottomNavigation showLabels={true}>
-        <BottomNavigationAction label="all" />
-        <BottomNavigationAction label="new" />
-      </BottomNavigation>
+      <div style={{ boxShadow: "0px -5px 5px rgba(0, 0, 0, 0.1)" }}>
+        <BottomNavigation
+          showLabels={true}
+          value={currentView}
+          onChange={(e: any, value: any) => setCurrentView(value)}
+        >
+          <BottomNavigationAction label="all" icon={<AccountTree />} />
+          <BottomNavigationAction label="new" icon={<InboxIcon />} />
+        </BottomNavigation>
+      </div>
     </div>
   );
 };
