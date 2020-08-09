@@ -31,6 +31,7 @@ import {
   initAppState,
   View,
   ContentTab,
+  pushParent,
 } from "../../data/reducers/appState";
 
 const getCurrentDepth = (id: Id | null, tree: IdToEvent): number =>
@@ -113,11 +114,11 @@ const Frame: React.FC = () => {
           <>
             <BackButton
               onClick={() =>
-                dispatch({
-                  type: "PUSH_PARENT",
-                  parent:
-                    appState.idToEvent[appState.currentParent || ""].parent,
-                })
+                dispatch(
+                  pushParent(
+                    appState.idToEvent[appState.currentParent || ""].parent
+                  )
+                )
               }
             >
               {"< back"}

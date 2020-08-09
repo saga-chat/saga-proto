@@ -19,6 +19,16 @@ export type AppStateAction =
   | { type: "CHANGE_CONTENT_TAB"; contentTab: ContentTab }
   | { type: "SET_REPLYING_TO"; replyingTo: Id };
 
+export const pushParent = (parent: Id | null): AppStateAction => ({
+  type: "PUSH_PARENT",
+  parent,
+});
+
+export const setReplyingTo = (replyingTo: Id): AppStateAction => ({
+  type: "SET_REPLYING_TO",
+  replyingTo,
+});
+
 export type AppStateDispatcher = React.Dispatch<AppStateAction>;
 
 export interface AppState {

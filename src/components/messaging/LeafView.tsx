@@ -13,7 +13,11 @@ import { Id } from "../../data/types/entity";
 import clusterIDs from "../../data/utils/clusterIDs";
 import getParentsWithNewChildren from "../../data/utils/getParentsWithNewChildren";
 import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
-import { AppStateDispatcher, AppState } from "../../data/reducers/appState";
+import {
+  AppStateDispatcher,
+  AppState,
+  pushParent,
+} from "../../data/reducers/appState";
 
 const LeafView: React.FC<{
   room: Room;
@@ -28,15 +32,11 @@ const LeafView: React.FC<{
       {clusters.map((cluster: Clustered, i: number) =>
         cluster.length > 0 ? (
           <Cluster
-            childMap={appState.childMap}
             key={i}
             ids={cluster}
-            tree={appState.idToEvent}
             depth={0}
-            onPush={(id: any) => dispatch({ type: "PUSH_PARENT", parent: id })}
-            onReplyClick={(id: any) =>
-              dispatch({ type: "SET_REPLYING_TO", replyingTo: id })
-            }
+            dispatch={dispatch}
+            appState={appState}
           />
         ) : null
       )}

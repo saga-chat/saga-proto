@@ -14,6 +14,7 @@ import { Id } from "../../data/types/entity";
 import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
 import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import { clusterSubstantives } from "./TreeView";
+import { AppState, AppStateDispatcher } from "../../data/reducers/appState";
 
 const ClusterDiv = styled.div`
   display: block;
@@ -45,20 +46,20 @@ export const Propic = styled.div<any>`
 
 const Cluster: React.FC<{
   ids: Id[];
-  tree: IdToEvent;
-  onPush(id: Id): void;
   depth: number;
-  childMap: ChildMap;
-  onReplyClick(id: Id): void;
-}> = ({ ids, tree, depth, onPush, childMap, onReplyClick }) => {
+  appState: AppState;
+  dispatch: AppStateDispatcher;
+}> = ({ ids, depth, appState, dispatch }) => {
   const { knownUsers } = React.useContext(DummyAppDataContext);
   const buffer = <div style={{ width: PROPIC_SIZE }} />;
   return (
     <ClusterDiv>
-      <CreatorDiv>{knownUsers[tree[ids[0]].creator].display_name}</CreatorDiv>
+      <CreatorDiv>
+        {knownUsers[appState.idToEvent[ids[0]].creator].display_name}
+      </CreatorDiv>
       {ids.map((id: Id, j: number) => {
-        const evt = tree[id];
-        const childEvents = childMap[id];
+        const evt = appState.idToEvent[id];
+        const childEvents = appState.childMap[id];
         return (
           <div
             key={j}
@@ -74,9 +75,8 @@ const Cluster: React.FC<{
               message={evt as any}
               childEvents={childEvents}
               depth={depth}
-              tree={tree}
-              onPush={onPush}
-              childMap={childMap}
+              appState={appState}
+              dispatch={dispatch}
               mode={
                 ids.length === 1
                   ? BubbleMode.singleton
@@ -86,7 +86,6 @@ const Cluster: React.FC<{
                   ? BubbleMode.bottom
                   : BubbleMode.middle
               }
-              onReplyClick={onReplyClick}
             />
           </div>
         );

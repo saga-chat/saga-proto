@@ -17,6 +17,7 @@ import {
   AppState,
   AppStateDispatcher,
   ContentTab,
+  pushParent,
 } from "../../data/reducers/appState";
 
 export const clusterSubstantives = (
@@ -48,15 +49,11 @@ const TreeView: React.FC<{
       {clusters.map((cluster: Clustered, i: number) =>
         cluster.length > 0 ? (
           <Cluster
-            childMap={appState.childMap}
             key={i}
             ids={cluster}
-            tree={appState.idToEvent}
+            appState={appState}
+            dispatch={dispatch}
             depth={0}
-            onPush={(id: any) => dispatch({ type: "PUSH_PARENT", parent: id })}
-            onReplyClick={(id: any) =>
-              dispatch({ type: "SET_REPLYING_TO", replyingTo: id })
-            }
           />
         ) : null
       )}

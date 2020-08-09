@@ -25,6 +25,12 @@ import { IconButton, colors } from "@material-ui/core";
 import isUnread from "../../data/utils/isUnread";
 import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import { purple_primary } from "../../colors";
+import {
+  AppStateDispatcher,
+  AppState,
+  setReplyingTo,
+  pushParent,
+} from "../../data/reducers/appState";
 
 export const MAX_PREVIEW_ELEMS = 5;
 export const MAX_DEPTH = 3;
@@ -45,32 +51,32 @@ const filterEmbellishmentsByContentIdx = (
 ) => embellishments.filter(({ contentIndex }) => contentIndex === index);
 
 type BubbleAndControlsProps = BubbleProps & {
-  tree: IdToEvent;
-  childMap: ChildMap;
-  onPush(id: Id): void;
-  onReplyClick(id: Id): void;
+  appState: AppState;
+  dispatch: AppStateDispatcher;
 };
 const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   message,
   mode,
   childEvents,
   depth,
-  tree,
-  onPush,
-  childMap,
-  onReplyClick,
+  appState,
+  dispatch,
 }) => {
   const appData = React.useContext(DummyAppDataContext);
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-  const substantiveChildren = clusterSubstantives(childEvents, tree, childMap);
+  const substantiveChildren = clusterSubstantives(
+    childEvents,
+    appState.idToEvent,
+    appState.childMap
+  );
   const lastNSubstantives =
     depth > MAX_DEPTH ? [] : takeRight(substantiveChildren, MAX_PREVIEW_ELEMS);
   const truncated = difference(childEvents, lastNSubstantives);
   const clustering =
     lastNSubstantives.length > 0
       ? clusterIDs(
-          tree,
+          appState.idToEvent,
           lastNSubstantives[lastNSubstantives.length - 1],
           lastNSubstantives
         )
@@ -108,14 +114,14 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
         <SideButtons
           show={showControls}
           selected={selected}
-          onReplyClick={() => onReplyClick(message.id)}
+          onReplyClick={() => dispatch(setReplyingTo(message.id))}
         />
       </BubbleControlsDiv>
       {truncated.length > 0 && (
         <MoreReplies
-          tree={tree}
+          tree={appState.idToEvent}
           childEvents={truncated}
-          onClick={() => onPush(message.id)}
+          onClick={() => dispatch(pushParent(message.id))}
         />
       )}
       <div style={{ paddingLeft: "1em" }}>
@@ -123,11 +129,9 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           <Cluster
             key={i}
             ids={cluster}
-            tree={tree}
             depth={depth + 1}
-            onPush={onPush}
-            childMap={childMap}
-            onReplyClick={onReplyClick}
+            appState={appState}
+            dispatch={dispatch}
           />
         ))}
       </div>
