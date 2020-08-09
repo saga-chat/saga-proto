@@ -8,7 +8,7 @@ import {
   Clusters,
 } from "../../data/types/events";
 import { groupBy } from "lodash";
-import { idToEvent } from "../../data/utils/buildTree";
+import { IdToEvent } from "../../data/utils/buildTree";
 import { Id } from "../../data/types/entity";
 import BorderColor from "@material-ui/icons/BorderColor";
 import MessageIcon from "@material-ui/icons/Message";
@@ -34,7 +34,7 @@ const More = styled.div`
 
 const MoreReplies: React.FC<{
   childEvents: Id[];
-  tree: idToEvent;
+  tree: IdToEvent;
   onClick(): void;
 }> = ({ childEvents, tree, onClick }) => {
   const contents = childEvents

@@ -1,9 +1,9 @@
 import { SagaEvent, Clusters } from "../types/events";
-import { idToEvent } from "./buildTree";
+import { IdToEvent } from "./buildTree";
 import { Id } from "../types/entity";
 import { transform } from "lodash";
 
-const clusterIDs = (events: idToEvent, seed: Id, subset?: Id[]): Clusters => {
+const clusterIDs = (events: IdToEvent, seed: Id, subset?: Id[]): Clusters => {
   let cluster: Id[];
   if (subset === undefined) {
     cluster = [seed];

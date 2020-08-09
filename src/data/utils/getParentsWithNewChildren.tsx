@@ -1,10 +1,10 @@
-import { idToEvent } from "./buildTree";
+import { IdToEvent } from "./buildTree";
 import { uniq } from "lodash";
 import { SagaEvent } from "../types/events";
 import { Id } from "../types/entity";
 import isUnread from "./isUnread";
 
-const getParentsWithNewChildren = (tree: idToEvent, myId: Id) =>
+const getParentsWithNewChildren = (tree: IdToEvent, myId: Id) =>
   uniq(
     Object.values(tree)
       .filter(

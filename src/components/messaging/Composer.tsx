@@ -2,6 +2,7 @@ import styled from "styled-components";
 import * as React from "react";
 import { ReplyingMode } from "../framing/Frame";
 import { Id } from "../../data/types/entity";
+import { AppState, AppStateDispatcher } from "../../data/reducers/appState";
 
 const ComposerDiv = styled.div<any>`
   padding: 1em;
@@ -13,17 +14,14 @@ const ComposerDiv = styled.div<any>`
 `;
 
 interface ComposerProps {
-  replyingState: ReplyingMode;
-  setReplyingTo(id: Id): void;
+  appState: AppState;
+  dispatch: AppStateDispatcher;
 }
 
-const Composer: React.FC<ComposerProps> = ({
-  replyingState,
-  setReplyingTo,
-}) => {
+const Composer: React.FC<ComposerProps> = ({ appState, dispatch }) => {
   return (
     <ComposerDiv>
-      {replyingState.replyingTo}
+      {appState.replyingTo}
       <input
         type="text"
         style={{

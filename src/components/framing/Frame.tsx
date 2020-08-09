@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import * as React from "react";
 import { Room } from "../../data/types/room";
-import buildTree, { idToEvent } from "../../data/utils/buildTree";
+import buildTree, { IdToEvent } from "../../data/utils/buildTree";
 import TreeView, { clusterSubstantives } from "../messaging/TreeView";
 import { Id } from "../../data/types/entity";
 import BigChip from "./BigChip";
@@ -26,8 +26,14 @@ import LeafView from "../messaging/LeafView";
 import Composer from "../messaging/Composer";
 import { useCallback } from "react";
 import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
+import {
+  appStateReducer,
+  initAppState,
+  View,
+  ContentTab,
+} from "../../data/reducers/appState";
 
-const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
+const getCurrentDepth = (id: Id | null, tree: IdToEvent): number =>
   id !== null && tree[id].parent !== null
     ? getCurrentDepth(tree[id].parent as any, tree) + 1
     : 0;
@@ -63,69 +69,57 @@ const Frame: React.FC = () => {
   const appData = React.useContext(DummyAppDataContext);
   const room = appData.knownRooms[appData.myRooms[0]];
   const { events } = room;
-  const [tree, treeTop, childMap] = buildTree(events);
-  const [currentParent, setCurrentParent] = React.useState<string | null>(null);
-  const currentDepth = getCurrentDepth(currentParent, tree);
-  const currentIds = currentParent !== null ? childMap[currentParent] : treeTop;
+
+  const [appState, dispatch] = React.useReducer(
+    appStateReducer,
+    { events },
+    initAppState
+  );
+
+  const currentDepth = getCurrentDepth(
+    appState.currentParent,
+    appState.idToEvent
+  );
+  const currentIds =
+    appState.currentParent !== null
+      ? appState.childMap[appState.currentParent]
+      : appState.treeTop;
   const parentUser =
-    currentParent !== null
-      ? appData.knownUsers[tree[currentParent].creator]
+    appState.currentParent !== null
+      ? appData.knownUsers[appState.idToEvent[appState.currentParent].creator]
       : null;
 
-  const [currentTab, setCurrentTab] = React.useState(0);
-  const [currentView, setCurrentView] = React.useState(0);
-
   const substantives =
-    currentParent !== null
-      ? clusterSubstantives(currentIds, tree, childMap)
+    appState.currentParent !== null
+      ? clusterSubstantives(currentIds, appState.idToEvent, appState.childMap)
       : [];
 
   const terminalReactions =
-    currentParent !== null
-      ? currentIds.filter((id: Id) => isTerminalReaction(id, tree, childMap))
+    appState.currentParent !== null
+      ? currentIds.filter((id: Id) =>
+          isTerminalReaction(id, appState.idToEvent, appState.childMap)
+        )
       : [];
 
-  const [replyingMode, setReplyingMode] = React.useState<ReplyingMode>({
-    replyingTo: null,
-  });
-
   const shouldReply =
-    replyingMode.replyingTo || (currentView === 0 && currentTab === 0);
-
-  const setReplyingTo = useCallback(
-    (id: Id | null) => {
-      setReplyingMode({ ...replyingMode, replyingTo: id });
-    },
-    [replyingMode]
-  );
-
-  //  USE DISPATCHER FOR EVERYTHING
-
-  const onPush = useCallback(
-    (id: Id | null) => {
-      if (
-        id !== null &&
-        childMap[id].filter((child: Id) =>
-          isSubstantiveMessage(child, tree, childMap)
-        ).length === 0
-      ) {
-        setCurrentTab(1);
-      } else {
-        setCurrentTab(0);
-      }
-      setCurrentView(0);
-      setCurrentParent(id);
-      setReplyingTo(null);
-    },
-    [childMap, tree]
-  );
+    appState.replyingTo ||
+    (appState.currentView === View.TREE &&
+      appState.currentContentTab === ContentTab.SUBSTANTIVES);
 
   return (
     <div style={{ display: "flex", flexFlow: "column", height: "100vh" }}>
       <Breadcrumb>
-        {currentParent !== null ? (
+        {appState.currentParent !== null ? (
           <>
-            <BackButton onClick={() => onPush(tree[currentParent].parent)}>
+            <BackButton
+              onClick={() =>
+                dispatch({
+                  type: "PUSH_PARENT",
+                  parent:
+                    appState.idToEvent[appState.currentParent || ""].parent,
+                })
+              }
+            >
               {"< back"}
             </BackButton>
             <CreatorDiv>{parentUser?.display_name}</CreatorDiv>
@@ -134,15 +128,17 @@ const Frame: React.FC = () => {
               mode={BubbleMode.singleton}
               depth={0}
               childEvents={[]}
-              message={tree[currentParent] as Message}
+              message={appState.idToEvent[appState.currentParent] as Message}
             />
           </>
         ) : (
           <>
             <BackButton>{room.name}</BackButton>
             <Tabs
-              value={currentView}
-              onChange={(e: any, value: any) => setCurrentView(value)}
+              value={appState.currentView}
+              onChange={(e: any, value: number) =>
+                dispatch({ type: "CHANGE_VIEW", view: value })
+              }
               style={{ display: "inline-block" }}
             >
               <Tab icon={<AccountTree fontSize="small" />} />
@@ -151,10 +147,12 @@ const Frame: React.FC = () => {
           </>
         )}
       </Breadcrumb>
-      {currentParent !== null && (
+      {appState.currentParent !== null && (
         <Tabs
-          value={currentTab}
-          onChange={(e: any, value: any) => setCurrentTab(value)}
+          value={appState.currentContentTab}
+          onChange={(e: any, value: any) =>
+            dispatch({ type: "CHANGE_CONTENT_TAB", contentTab: value })
+          }
         >
           <Tab
             label={
@@ -173,41 +171,24 @@ const Frame: React.FC = () => {
         </Tabs>
       )}
       <div style={{ overflow: "auto", flex: 1 }}>
-        {currentView === 0 ? (
-          currentTab === 0 || currentParent === null ? (
-            <TreeView
-              room={room}
-              tree={tree}
-              ids={currentIds}
-              onPush={onPush}
-              childMap={childMap}
-              contentType={"SUBSTANTIVES"}
-              onReplyClick={setReplyingTo}
-            />
-          ) : currentTab === 1 ? (
-            <TreeView
-              room={room}
-              tree={tree}
-              ids={currentIds}
-              onPush={onPush}
-              childMap={childMap}
-              contentType={"REACTIONS"}
-              onReplyClick={setReplyingTo}
-            />
-          ) : null
-        ) : (
-          <LeafView
+        {appState.currentView === View.TREE ? (
+          <TreeView
             room={room}
-            tree={tree}
-            onPush={onPush}
-            childMap={childMap}
-            onReplyClick={setReplyingTo}
+            ids={currentIds}
+            appState={appState}
+            dispatch={dispatch}
+            contentType={
+              appState.currentContentTab === ContentTab.SUBSTANTIVES ||
+              appState.currentParent === null
+                ? ContentTab.SUBSTANTIVES
+                : ContentTab.REACTIONS
+            }
           />
+        ) : (
+          <LeafView room={room} appState={appState} dispatch={dispatch} />
         )}
       </div>
-      {shouldReply && (
-        <Composer replyingState={replyingMode} setReplyingTo={setReplyingTo} />
-      )}
+      {shouldReply && <Composer appState={appState} dispatch={dispatch} />}
     </div>
   );
 };

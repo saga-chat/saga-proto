@@ -7,7 +7,7 @@ import {
   Clustered,
   ChildMap,
 } from "../../data/types/events";
-import { idToEvent } from "../../data/utils/buildTree";
+import { IdToEvent } from "../../data/utils/buildTree";
 import BubbleAndControls from "./BubbleAndControls";
 import { BubbleMode } from "./Bubble";
 import { Id } from "../../data/types/entity";
@@ -45,7 +45,7 @@ export const Propic = styled.div<any>`
 
 const Cluster: React.FC<{
   ids: Id[];
-  tree: idToEvent;
+  tree: IdToEvent;
   onPush(id: Id): void;
   depth: number;
   childMap: ChildMap;

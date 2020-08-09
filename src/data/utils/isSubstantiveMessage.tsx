@@ -4,10 +4,10 @@ import {
   SagaEvent,
   ChildMap,
 } from "../types/events";
-import { idToEvent } from "./buildTree";
+import { IdToEvent } from "./buildTree";
 import { Id } from "../types/entity";
 
-const isSubstantiveMessage = (id: Id, tree: idToEvent, childMap: ChildMap) =>
+const isSubstantiveMessage = (id: Id, tree: IdToEvent, childMap: ChildMap) =>
   ((tree[id] as any).kind === "message" &&
     (tree[id] as any).contents.some(
       ({ kind }: MessageContent) => SubstantiveContent.indexOf(kind) > -1

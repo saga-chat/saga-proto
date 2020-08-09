@@ -13,7 +13,7 @@ import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
 import Cluster from "./Cluster";
-import { idToEvent } from "../../data/utils/buildTree";
+import { IdToEvent } from "../../data/utils/buildTree";
 import { reduceRight, takeRight, difference } from "lodash";
 import { Id } from "../../data/types/entity";
 import clusterIDs from "../../data/utils/clusterIDs";
@@ -45,7 +45,7 @@ const filterEmbellishmentsByContentIdx = (
 ) => embellishments.filter(({ contentIndex }) => contentIndex === index);
 
 type BubbleAndControlsProps = BubbleProps & {
-  tree: idToEvent;
+  tree: IdToEvent;
   childMap: ChildMap;
   onPush(id: Id): void;
   onReplyClick(id: Id): void;

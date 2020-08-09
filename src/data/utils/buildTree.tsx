@@ -1,13 +1,15 @@
 import { SagaEvent, Clusters, ChildMap } from "../types/events";
 import { Id } from "../types/entity";
-export type idToEvent = { [id: string]: SagaEvent };
+export type IdToEvent = { [id: string]: SagaEvent };
 
-const buildTree = (events: SagaEvent[]): [idToEvent, Id[], ChildMap] => {
-  const byID: idToEvent = {};
+const buildTree = (
+  events: SagaEvent[]
+): { idToEvent: IdToEvent; treeTop: Id[]; childMap: ChildMap } => {
+  const idToEvent: IdToEvent = {};
   const treeTop: Id[] = [];
   const childMap: ChildMap = {};
   for (const evt of events) {
-    byID[evt.id] = evt;
+    idToEvent[evt.id] = evt;
     childMap[evt.id] = [];
 
     if (evt.parent !== null) {
@@ -22,7 +24,7 @@ const buildTree = (events: SagaEvent[]): [idToEvent, Id[], ChildMap] => {
       treeTop.push(evt.id);
     }
   }
-  return [byID, treeTop, childMap];
+  return { idToEvent, treeTop, childMap };
 };
 
 export default buildTree;

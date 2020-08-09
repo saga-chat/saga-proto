@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as React from "react";
 import { Clusters, Message, MessageContent } from "../../data/types/events";
 import { Room } from "../../data/types/room";
-import buildTree, { idToEvent } from "../../data/utils/buildTree";
+import buildTree, { IdToEvent } from "../../data/utils/buildTree";
 import { Id } from "../../data/types/entity";
 import Content from "../messaging/Content";
 import { DummyAppDataContext } from "../../data/dummy/dummyAppData";

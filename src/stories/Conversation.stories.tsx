@@ -5,8 +5,8 @@ import { action } from "@storybook/addon-actions";
 import Conversation from "../components/messaging/TreeView";
 import dummyRoom from "../data/dummy/dummyRoom";
 import buildTree from "../data/utils/buildTree";
-const { events } = dummyRoom;
-const [tree, clusters] = buildTree(events);
+// const { events } = dummyRoom;
+// const {tree, clusters} = buildTree(events);
 // export const ConvoComplete = () => (
 //   <Conversation room={dummyRoom} tree={tree} onPush={action("push")} />
 // );
