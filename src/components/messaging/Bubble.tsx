@@ -5,10 +5,10 @@ import {
   Embellishment,
   SagaEvent,
   Clusters,
-} from "../../types/events";
+} from "../../data/types/events";
 import Content from "./Content";
 import { purple_primary } from "../../colors";
-import { Id } from "../../types/entity";
+import { Id } from "../../data/types/entity";
 
 export enum BubbleMode {
   top,

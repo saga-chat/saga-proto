@@ -1,6 +1,6 @@
 import Bubble, { BubbleMode } from "../components/messaging/Bubble";
 import * as React from "react";
-import messageDummy from "../types/dummy/dummyMessage";
+import messageDummy from "../data/dummy/dummyMessage";
 
 export const Top = () => (
   <Bubble

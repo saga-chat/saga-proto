@@ -1,6 +1,6 @@
-import { Id } from "../entity";
+import { Id } from "../types/entity";
 import uniqid from "uniqid";
-import { User } from "../user";
+import { User } from "../types/user";
 
 const makeUser = (): User => {
   const id = uniqid();

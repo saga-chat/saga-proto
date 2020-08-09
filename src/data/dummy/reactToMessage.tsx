@@ -1,4 +1,4 @@
-import { Message, Range } from "../events";
+import { Message, Range } from "../types/events";
 import uniqid from "uniqid";
 
 export default (

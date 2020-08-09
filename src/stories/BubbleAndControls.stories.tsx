@@ -1,6 +1,6 @@
 import Bubble, { BubbleMode } from "../components/messaging/Bubble";
 import * as React from "react";
-import messageDummy from "../types/dummy/dummyMessage";
+import messageDummy from "../data/dummy/dummyMessage";
 import BubbleAndControls from "../components/messaging/BubbleAndControls";
 import { action } from "@storybook/addon-actions";
 

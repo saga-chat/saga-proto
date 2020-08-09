@@ -1,4 +1,4 @@
-import { Room } from "../room";
+import { Room } from "../types/room";
 import uniqid from "uniqid";
 import makeChain from "./makeChain";
 import makeMessage from "./makeMessage";
@@ -97,7 +97,7 @@ const dummyRoom: Room = {
   created: Date.now(),
   id: uniqid(),
   members: { [dummyMeId]: { id: dummyMeId, online: true, lastTyping: null } },
-  name: "Telescope emoji",
+  name: "Brady Bunch Room",
   events,
 };
 

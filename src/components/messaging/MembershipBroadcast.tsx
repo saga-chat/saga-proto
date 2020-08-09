@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Embellishment, Message } from "../../types/events";
+import { Embellishment, Message } from "../../data/types/events";
 
 const MoreText = styled.div`
   font-family: "Inter", sans-serif;

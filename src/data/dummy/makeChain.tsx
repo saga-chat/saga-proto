@@ -1,4 +1,4 @@
-import { SagaEvent } from "../events";
+import { SagaEvent } from "../types/events";
 import makeMessage from "./makeMessage";
 import correctBelowChain from "./correctBelowChain";
 export default (

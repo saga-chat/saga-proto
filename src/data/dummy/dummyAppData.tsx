@@ -1,7 +1,7 @@
-import { AppData } from "../appdata";
+import { AppData } from "../types/appdata";
 import dummyRoom from "./dummyRoom";
 import dummyMeId from "./dummyMe";
-import { LocalUser } from "../user";
+import { LocalUser } from "../types/user";
 import dummyUsers from "./dummyUsers";
 import React from "react";
 

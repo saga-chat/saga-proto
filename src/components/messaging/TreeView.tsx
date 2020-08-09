@@ -1,13 +1,18 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Clustered, Clusters, ChildMap, SagaEvent } from "../../types/events";
-import { Room } from "../../types/room";
-import buildTree, { idToEvent } from "../../types/utils/buildTree";
+import {
+  Clustered,
+  Clusters,
+  ChildMap,
+  SagaEvent,
+} from "../../data/types/events";
+import { Room } from "../../data/types/room";
+import buildTree, { idToEvent } from "../../data/utils/buildTree";
 import Cluster from "./Cluster";
-import { Id } from "../../types/entity";
-import clusterIDs from "../../types/utils/clusterIDs";
-import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
-import isTerminalReaction from "../../types/utils/isTerminalReaction";
+import { Id } from "../../data/types/entity";
+import clusterIDs from "../../data/utils/clusterIDs";
+import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
+import isTerminalReaction from "../../data/utils/isTerminalReaction";
 
 export const clusterSubstantives = (
   cluster: Id[],
@@ -22,9 +27,10 @@ const TreeView: React.FC<{
   onPush(id: Id): void;
   childMap: ChildMap;
   contentType: "SUBSTANTIVES" | "REACTIONS";
-}> = ({ room, tree, ids, onPush, childMap, contentType }) => {
+  onReplyClick(id: Id): void;
+}> = ({ room, tree, ids, onPush, childMap, contentType, onReplyClick }) => {
   // TODO: cluster does not support non messages!
-  const clusters = clusterIDs(tree, ids[ids.length - 1]).map((cluster) =>
+  const clusters = clusterIDs(tree, ids[ids.length - 1]).map((cluster: Id[]) =>
     contentType === "SUBSTANTIVES"
       ? clusterSubstantives(cluster, tree, childMap)
       : cluster.filter((id) => isTerminalReaction(id, tree, childMap))
@@ -40,6 +46,7 @@ const TreeView: React.FC<{
             tree={tree}
             depth={0}
             onPush={onPush}
+            onReplyClick={onReplyClick}
           />
         ) : null
       )}

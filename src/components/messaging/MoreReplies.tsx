@@ -6,10 +6,10 @@ import {
   SagaEvent,
   MessageContent,
   Clusters,
-} from "../../types/events";
+} from "../../data/types/events";
 import { groupBy } from "lodash";
-import { idToEvent } from "../../types/utils/buildTree";
-import { Id } from "../../types/entity";
+import { idToEvent } from "../../data/utils/buildTree";
+import { Id } from "../../data/types/entity";
 import BorderColor from "@material-ui/icons/BorderColor";
 import MessageIcon from "@material-ui/icons/Message";
 

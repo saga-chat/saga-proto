@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Clusters, Message, MessageContent } from "../../types/events";
-import { Room } from "../../types/room";
-import buildTree, { idToEvent } from "../../types/utils/buildTree";
-import { Id } from "../../types/entity";
+import { Clusters, Message, MessageContent } from "../../data/types/events";
+import { Room } from "../../data/types/room";
+import buildTree, { idToEvent } from "../../data/utils/buildTree";
+import { Id } from "../../data/types/entity";
 import Content from "../messaging/Content";
-import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import { useContext } from "react";
 
 const BigChipDiv = styled.div`

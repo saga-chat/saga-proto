@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as React from "react";
-import { MessageContent } from "../../types/events";
+import { MessageContent } from "../../data/types/events";
 import ReactMarkdown from "react-markdown";
 
 const TextBody = styled.div`

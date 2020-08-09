@@ -1,4 +1,4 @@
-import { SagaEvent } from "../events";
+import { SagaEvent } from "../types/events";
 import correctBelowChain from "./correctBelowChain";
 import uniqid from "uniqid";
 import makeMessage from "./makeMessage";

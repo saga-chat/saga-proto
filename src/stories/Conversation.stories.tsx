@@ -1,10 +1,10 @@
 import Bubble, { BubbleMode } from "../components/messaging/Bubble";
 import * as React from "react";
-import messageDummy from "../types/dummy/dummyMessage";
+import messageDummy from "../data/dummy/dummyMessage";
 import { action } from "@storybook/addon-actions";
 import Conversation from "../components/messaging/TreeView";
-import dummyRoom from "../types/dummy/dummyRoom";
-import buildTree from "../types/utils/buildTree";
+import dummyRoom from "../data/dummy/dummyRoom";
+import buildTree from "../data/utils/buildTree";
 const { events } = dummyRoom;
 const [tree, clusters] = buildTree(events);
 // export const ConvoComplete = () => (

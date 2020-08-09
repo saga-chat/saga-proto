@@ -1,7 +1,7 @@
 import { idToEvent } from "./buildTree";
 import { uniq } from "lodash";
-import { SagaEvent } from "../events";
-import { Id } from "../entity";
+import { SagaEvent } from "../types/events";
+import { Id } from "../types/entity";
 import isUnread from "./isUnread";
 
 const getParentsWithNewChildren = (tree: idToEvent, myId: Id) =>

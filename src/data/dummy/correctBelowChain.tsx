@@ -1,4 +1,4 @@
-import { SagaEvent } from "../events";
+import { SagaEvent } from "../types/events";
 
 export default (events: SagaEvent[], below: string | null) =>
   events.map((evt: SagaEvent, idx: number) => ({

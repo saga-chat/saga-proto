@@ -1,20 +1,26 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Clustered, Clusters, ChildMap, SagaEvent } from "../../types/events";
-import { Room } from "../../types/room";
-import buildTree, { idToEvent } from "../../types/utils/buildTree";
+import {
+  Clustered,
+  Clusters,
+  ChildMap,
+  SagaEvent,
+} from "../../data/types/events";
+import { Room } from "../../data/types/room";
+import buildTree, { idToEvent } from "../../data/utils/buildTree";
 import Cluster from "./Cluster";
-import { Id } from "../../types/entity";
-import clusterIDs from "../../types/utils/clusterIDs";
-import getParentsWithNewChildren from "../../types/utils/getParentsWithNewChildren";
-import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { Id } from "../../data/types/entity";
+import clusterIDs from "../../data/utils/clusterIDs";
+import getParentsWithNewChildren from "../../data/utils/getParentsWithNewChildren";
+import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 
 const LeafView: React.FC<{
   room: Room;
   tree: idToEvent;
   onPush(id: Id): void;
   childMap: ChildMap;
-}> = ({ room, tree, onPush, childMap }) => {
+  onReplyClick(id: Id): void;
+}> = ({ room, tree, onPush, childMap, onReplyClick }) => {
   const appData = React.useContext(DummyAppDataContext);
   const ids = getParentsWithNewChildren(tree, appData.me);
   const clusters = clusterIDs(tree, ids[ids.length - 1], ids);
@@ -29,6 +35,7 @@ const LeafView: React.FC<{
             tree={tree}
             depth={0}
             onPush={onPush}
+            onReplyClick={onReplyClick}
           />
         ) : null
       )}

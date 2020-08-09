@@ -3,9 +3,9 @@ import {
   MessageContent,
   SagaEvent,
   ChildMap,
-} from "../events";
+} from "../types/events";
 import { idToEvent } from "./buildTree";
-import { Id } from "../entity";
+import { Id } from "../types/entity";
 
 const isSubstantiveMessage = (id: Id, tree: idToEvent, childMap: ChildMap) =>
   ((tree[id] as any).kind === "message" &&

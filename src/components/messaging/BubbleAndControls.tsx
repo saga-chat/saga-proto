@@ -7,23 +7,23 @@ import {
   Clusters,
   ChildMap,
   SagaEvent,
-} from "../../types/events";
+} from "../../data/types/events";
 import { BubbleProps } from "./Bubble";
 import Bubble from "./Bubble";
 import SideButtons, { SideButtonsData } from "./SideButtons";
 import MoreReplies from "./MoreReplies";
 import Cluster from "./Cluster";
-import { idToEvent } from "../../types/utils/buildTree";
+import { idToEvent } from "../../data/utils/buildTree";
 import { reduceRight, takeRight, difference } from "lodash";
-import { Id } from "../../types/entity";
-import clusterIDs from "../../types/utils/clusterIDs";
+import { Id } from "../../data/types/entity";
+import clusterIDs from "../../data/utils/clusterIDs";
 import { clusterSubstantives } from "./TreeView";
 
 import CircleIcon from "@material-ui/icons/FiberManualRecord";
 import OutlinedCircleIcon from "@material-ui/icons/FiberManualRecordOutlined";
 import { IconButton, colors } from "@material-ui/core";
-import isUnread from "../../types/utils/isUnread";
-import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import isUnread from "../../data/utils/isUnread";
+import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import { purple_primary } from "../../colors";
 
 export const MAX_PREVIEW_ELEMS = 5;
@@ -48,6 +48,7 @@ type BubbleAndControlsProps = BubbleProps & {
   tree: idToEvent;
   childMap: ChildMap;
   onPush(id: Id): void;
+  onReplyClick(id: Id): void;
 };
 const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   message,
@@ -57,6 +58,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   tree,
   onPush,
   childMap,
+  onReplyClick,
 }) => {
   const appData = React.useContext(DummyAppDataContext);
   const [showControls, setShowControls] = React.useState(false);
@@ -106,7 +108,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
         <SideButtons
           show={showControls}
           selected={selected}
-          onReplyClick={console.log}
+          onReplyClick={() => onReplyClick(message.id)}
         />
       </BubbleControlsDiv>
       {truncated.length > 0 && (
@@ -125,6 +127,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
             depth={depth + 1}
             onPush={onPush}
             childMap={childMap}
+            onReplyClick={onReplyClick}
           />
         ))}
       </div>

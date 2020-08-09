@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import * as React from "react";
-import { Room } from "../../types/room";
-import buildTree, { idToEvent } from "../../types/utils/buildTree";
+import { Room } from "../../data/types/room";
+import buildTree, { idToEvent } from "../../data/utils/buildTree";
 import TreeView, { clusterSubstantives } from "../messaging/TreeView";
-import { Id } from "../../types/entity";
+import { Id } from "../../data/types/entity";
 import BigChip from "./BigChip";
-import { AppData } from "../../types/appdata";
-import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { AppData } from "../../data/types/appdata";
+import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import Bubble, { BubbleMode } from "../messaging/Bubble";
-import { Message } from "../../types/events";
+import { Message } from "../../data/types/events";
 import { Propic, CreatorDiv } from "../messaging/Cluster";
 import { purple_primary } from "../../colors";
 
@@ -21,8 +21,11 @@ import AccountTree from "@material-ui/icons/AccountTree";
 import Badge from "@material-ui/core/Badge";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import isTerminalReaction from "../../types/utils/isTerminalReaction";
+import isTerminalReaction from "../../data/utils/isTerminalReaction";
 import LeafView from "../messaging/LeafView";
+import Composer from "../messaging/Composer";
+import { useCallback } from "react";
+import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
 
 const getCurrentDepth = (id: Id | null, tree: idToEvent): number =>
   id !== null && tree[id].parent !== null
@@ -52,6 +55,10 @@ const BackButton = styled.button`
   }
 `;
 
+export type ReplyingMode = {
+  replyingTo: Id | null;
+};
+
 const Frame: React.FC = () => {
   const appData = React.useContext(DummyAppDataContext);
   const room = appData.knownRooms[appData.myRooms[0]];
@@ -75,17 +82,50 @@ const Frame: React.FC = () => {
 
   const terminalReactions =
     currentParent !== null
-      ? currentIds.filter((id) => isTerminalReaction(id, tree, childMap))
+      ? currentIds.filter((id: Id) => isTerminalReaction(id, tree, childMap))
       : [];
+
+  const [replyingMode, setReplyingMode] = React.useState<ReplyingMode>({
+    replyingTo: null,
+  });
+
+  const shouldReply =
+    replyingMode.replyingTo || (currentView === 0 && currentTab === 0);
+
+  const setReplyingTo = useCallback(
+    (id: Id | null) => {
+      setReplyingMode({ ...replyingMode, replyingTo: id });
+    },
+    [replyingMode]
+  );
+
+  //  USE DISPATCHER FOR EVERYTHING
+
+  const onPush = useCallback(
+    (id: Id | null) => {
+      if (
+        id !== null &&
+        childMap[id].filter((child: Id) =>
+          isSubstantiveMessage(child, tree, childMap)
+        ).length === 0
+      ) {
+        setCurrentTab(1);
+      } else {
+        setCurrentTab(0);
+      }
+      setCurrentView(0);
+      setCurrentParent(id);
+      setReplyingTo(null);
+    },
+    [childMap, tree]
+  );
 
   return (
     <div style={{ display: "flex", flexFlow: "column", height: "100vh" }}>
       <Breadcrumb>
         {currentParent !== null ? (
           <>
-            <BackButton
-              onClick={() => setCurrentParent(tree[currentParent].parent)}
-            >
+            <BackButton onClick={() => onPush(tree[currentParent].parent)}>
               {"< back"}
             </BackButton>
             <CreatorDiv>{parentUser?.display_name}</CreatorDiv>
@@ -98,7 +138,17 @@ const Frame: React.FC = () => {
             />
           </>
         ) : (
-          <BackButton>{room.name}</BackButton>
+          <>
+            <BackButton>{room.name}</BackButton>
+            <Tabs
+              value={currentView}
+              onChange={(e: any, value: any) => setCurrentView(value)}
+              style={{ display: "inline-block" }}
+            >
+              <Tab icon={<AccountTree fontSize="small" />} />
+              <Tab icon={<InboxIcon fontSize="small" />} />
+            </Tabs>
+          </>
         )}
       </Breadcrumb>
       {currentParent !== null && (
@@ -129,39 +179,35 @@ const Frame: React.FC = () => {
               room={room}
               tree={tree}
               ids={currentIds}
-              onPush={setCurrentParent}
+              onPush={onPush}
               childMap={childMap}
               contentType={"SUBSTANTIVES"}
+              onReplyClick={setReplyingTo}
             />
           ) : currentTab === 1 ? (
             <TreeView
               room={room}
               tree={tree}
               ids={currentIds}
-              onPush={setCurrentParent}
+              onPush={onPush}
               childMap={childMap}
               contentType={"REACTIONS"}
+              onReplyClick={setReplyingTo}
             />
           ) : null
         ) : (
           <LeafView
             room={room}
             tree={tree}
-            onPush={setCurrentParent}
+            onPush={onPush}
             childMap={childMap}
+            onReplyClick={setReplyingTo}
           />
         )}
       </div>
-      <div style={{ boxShadow: "0px -5px 5px rgba(0, 0, 0, 0.1)" }}>
-        <BottomNavigation
-          showLabels={true}
-          value={currentView}
-          onChange={(e: any, value: any) => setCurrentView(value)}
-        >
-          <BottomNavigationAction label="all" icon={<AccountTree />} />
-          <BottomNavigationAction label="new" icon={<InboxIcon />} />
-        </BottomNavigation>
-      </div>
+      {shouldReply && (
+        <Composer replyingState={replyingMode} setReplyingTo={setReplyingTo} />
+      )}
     </div>
   );
 };

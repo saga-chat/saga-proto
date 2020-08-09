@@ -1,5 +1,5 @@
-import { SagaEvent, Clusters, ChildMap } from "../events";
-import { Id } from "../entity";
+import { SagaEvent, Clusters, ChildMap } from "../types/events";
+import { Id } from "../types/entity";
 export type idToEvent = { [id: string]: SagaEvent };
 
 const buildTree = (events: SagaEvent[]): [idToEvent, Id[], ChildMap] => {

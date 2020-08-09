@@ -6,13 +6,13 @@ import {
   SagaEvent,
   Clustered,
   ChildMap,
-} from "../../types/events";
-import { idToEvent } from "../../types/utils/buildTree";
+} from "../../data/types/events";
+import { idToEvent } from "../../data/utils/buildTree";
 import BubbleAndControls from "./BubbleAndControls";
 import { BubbleMode } from "./Bubble";
-import { Id } from "../../types/entity";
-import isSubstantiveMessage from "../../types/utils/isSubstantiveMessage";
-import { DummyAppDataContext } from "../../types/dummy/dummyAppData";
+import { Id } from "../../data/types/entity";
+import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
+import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import { clusterSubstantives } from "./TreeView";
 
 const ClusterDiv = styled.div`
@@ -49,7 +49,8 @@ const Cluster: React.FC<{
   onPush(id: Id): void;
   depth: number;
   childMap: ChildMap;
-}> = ({ ids, tree, depth, onPush, childMap }) => {
+  onReplyClick(id: Id): void;
+}> = ({ ids, tree, depth, onPush, childMap, onReplyClick }) => {
   const { knownUsers } = React.useContext(DummyAppDataContext);
   const buffer = <div style={{ width: PROPIC_SIZE }} />;
   return (
@@ -85,6 +86,7 @@ const Cluster: React.FC<{
                   ? BubbleMode.bottom
                   : BubbleMode.middle
               }
+              onReplyClick={onReplyClick}
             />
           </div>
         );
