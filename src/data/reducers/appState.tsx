@@ -17,14 +17,14 @@ export type AppStateAction =
   | { type: "PUSH_PARENT"; parent: Id | null }
   | { type: "CHANGE_VIEW"; view: View }
   | { type: "CHANGE_CONTENT_TAB"; contentTab: ContentTab }
-  | { type: "SET_REPLYING_TO"; replyingTo: Id };
+  | { type: "SET_REPLYING_TO"; replyingTo: Id | null };
 
 export const pushParent = (parent: Id | null): AppStateAction => ({
   type: "PUSH_PARENT",
   parent,
 });
 
-export const setReplyingTo = (replyingTo: Id): AppStateAction => ({
+export const setReplyingTo = (replyingTo: Id | null): AppStateAction => ({
   type: "SET_REPLYING_TO",
   replyingTo,
 });
@@ -60,9 +60,13 @@ export const appStateReducer = (
 ): AppState => {
   switch (action.type) {
     case "CHANGE_CONTENT_TAB":
-      return { ...state, currentContentTab: action.contentTab };
+      return {
+        ...state,
+        currentContentTab: action.contentTab,
+        replyingTo: null,
+      };
     case "CHANGE_VIEW":
-      return { ...state, currentView: action.view };
+      return { ...state, currentView: action.view, replyingTo: null };
     case "PUSH_PARENT":
       const commonState = {
         ...state,

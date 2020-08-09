@@ -4,7 +4,6 @@ import { Room } from "../../data/types/room";
 import buildTree, { IdToEvent } from "../../data/utils/buildTree";
 import TreeView, { clusterSubstantives } from "../messaging/TreeView";
 import { Id } from "../../data/types/entity";
-import BigChip from "./BigChip";
 import { AppData } from "../../data/types/appdata";
 import { DummyAppDataContext } from "../../data/dummy/dummyAppData";
 import Bubble, { BubbleMode } from "../messaging/Bubble";
