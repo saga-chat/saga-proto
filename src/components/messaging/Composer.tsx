@@ -106,7 +106,12 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
               <CancelIcon fontSize="small" />
             </IconButton>
           </div>
-          <Content content={replyingToContent.contents[0]} childContent={[]} />
+          <div style={{ maxWidth: 300 }}>
+            <Content
+              content={replyingToContent.contents[0]}
+              childContent={[]}
+            />
+          </div>
         </ReplyingToChip>
       )}
       <ComposerRow>
