@@ -75,7 +75,7 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
         dispatch(setReplyingTo(null));
       }
     },
-    [inputVal]
+    [dispatch, inputVal, appState.replyingTo]
   );
   React.useEffect(() => {
     if (inputRef.current) {
