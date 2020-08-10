@@ -4,10 +4,13 @@ import { IconButton } from "@material-ui/core";
 import Reply from "@material-ui/icons/Reply";
 import Edit from "@material-ui/icons/Edit";
 import BorderColor from "@material-ui/icons/BorderColor";
-import Visibility from "@material-ui/icons/Visibility";
 import InsertEmoticon from "@material-ui/icons/InsertEmoticon";
 import Tooltip from "@material-ui/core/Tooltip";
 import Zoom from "@material-ui/core/Zoom";
+import Fade from "@material-ui/core/Fade";
+import EmojiIcon from "@material-ui/icons/EmojiEmotions";
+import { Picker, EmojiData } from "emoji-mart";
+import Popover from "@material-ui/core/Popover";
 
 const SideBtns = styled.div<any>`
   display: flex;
@@ -23,6 +26,8 @@ const SideBtns = styled.div<any>`
 export interface SideButtonsData {
   selected: number | null;
   onReplyClick(): void;
+  onEmojiPick(emoji: string): void;
+  isMe: boolean;
 }
 
 export type SideButtonsProps = SideButtonsData & { show: boolean };
@@ -31,7 +36,21 @@ const SideButtons: React.FC<SideButtonsProps> = ({
   selected,
   show,
   onReplyClick,
+  isMe,
+  onEmojiPick,
 }) => {
+  const [emojiPickerOpen, setEmojiPickerOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (!show && emojiPickerOpen) {
+      setEmojiPickerOpen(false);
+    }
+  }, [show, emojiPickerOpen]);
+
+  const onEmojiSelect = React.useCallback((emoji: EmojiData) => {
+    setEmojiPickerOpen(false);
+    onEmojiPick((emoji as any).native);
+  }, []);
+  const pickerAnchor = React.useRef<any>();
   return (
     <SideBtns show={show}>
       <Tooltip title="reply" TransitionComponent={Zoom}>
@@ -39,6 +58,26 @@ const SideButtons: React.FC<SideButtonsProps> = ({
           <Reply />
         </IconButton>
       </Tooltip>
+      <Tooltip title="react" TransitionComponent={Zoom}>
+        <IconButton onClick={() => setEmojiPickerOpen(true)} ref={pickerAnchor}>
+          <EmojiIcon />
+        </IconButton>
+      </Tooltip>
+      <Popover
+        open={emojiPickerOpen}
+        anchorEl={pickerAnchor.current}
+        onClose={() => setEmojiPickerOpen(false)}
+        TransitionComponent={Fade}
+      >
+        <Picker
+          set="twitter"
+          autoFocus={true}
+          theme="auto"
+          title=""
+          onSelect={onEmojiSelect}
+        />
+      </Popover>
+
       {selected ? (
         <>
           <Tooltip title="highlight" TransitionComponent={Zoom}>
@@ -52,21 +91,15 @@ const SideButtons: React.FC<SideButtonsProps> = ({
             </IconButton>
           </Tooltip>
         </>
-      ) : (
+      ) : isMe ? (
         <>
-          {/* TODO: hide if not my message */}
           <Tooltip title="edit" TransitionComponent={Zoom}>
             <IconButton>
               <Edit />
             </IconButton>
           </Tooltip>
-          <Tooltip title="mark unread" TransitionComponent={Zoom}>
-            <IconButton>
-              <Visibility />
-            </IconButton>
-          </Tooltip>
         </>
-      )}
+      ) : null}
     </SideBtns>
   );
 };

@@ -30,6 +30,7 @@ import {
   AppState,
   setReplyingTo,
   pushParent,
+  sendReaction,
 } from "../../data/reducers/appState";
 
 export const MAX_PREVIEW_ELEMS = 5;
@@ -62,7 +63,6 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
   appState,
   dispatch,
 }) => {
-  const appData = React.useContext(DummyAppDataContext);
   const [showControls, setShowControls] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
   const substantiveChildren = clusterSubstantives(
@@ -81,7 +81,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           lastNSubstantives
         )
       : [];
-  const unread = isUnread(message, appData.me);
+  const unread = isUnread(message, appState.myID);
   return (
     <div style={{ display: "inline-block", flexGrow: 1 }}>
       <BubbleControlsDiv
@@ -115,6 +115,10 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
           show={showControls}
           selected={selected}
           onReplyClick={() => dispatch(setReplyingTo(message.id))}
+          onEmojiPick={(emoji: string) =>
+            dispatch(sendReaction(emoji, message.id))
+          }
+          isMe={appState.myID === message.creator}
         />
       </BubbleControlsDiv>
       {truncated.length > 0 && (

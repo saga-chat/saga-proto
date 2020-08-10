@@ -20,7 +20,7 @@ import AccountTree from "@material-ui/icons/AccountTree";
 import Badge from "@material-ui/core/Badge";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import isTerminalReaction from "../../data/utils/isTerminalReaction";
+import isReaction from "../../data/utils/isReaction";
 import LeafView from "../messaging/LeafView";
 import Composer from "../messaging/Composer";
 import { useCallback } from "react";
@@ -72,7 +72,7 @@ const Frame: React.FC = () => {
 
   const [appState, dispatch] = React.useReducer(
     appStateReducer,
-    { events },
+    { events, myID: appData.me },
     initAppState
   );
 
@@ -94,15 +94,15 @@ const Frame: React.FC = () => {
       ? clusterSubstantives(currentIds, appState.idToEvent, appState.childMap)
       : [];
 
-  const terminalReactions =
+  const reactions =
     appState.currentParent !== null
       ? currentIds.filter((id: Id) =>
-          isTerminalReaction(id, appState.idToEvent, appState.childMap)
+          isReaction(id, appState.idToEvent, appState.childMap)
         )
       : [];
 
   const shouldReply =
-    appState.replyingTo ||
+    appState.replyingTo !== null ||
     (appState.currentView === View.TREE &&
       appState.currentContentTab === ContentTab.SUBSTANTIVES);
 
@@ -163,7 +163,7 @@ const Frame: React.FC = () => {
           />
           <Tab
             label={
-              <Badge badgeContent={terminalReactions.length} color="primary">
+              <Badge badgeContent={reactions.length} color="primary">
                 <EmojiEmoticons />
               </Badge>
             }
@@ -188,7 +188,7 @@ const Frame: React.FC = () => {
           <LeafView room={room} appState={appState} dispatch={dispatch} />
         )}
       </div>
-      {shouldReply && <Composer appState={appState} dispatch={dispatch} />}
+      <Composer appState={appState} dispatch={dispatch} show={shouldReply} />
     </div>
   );
 };

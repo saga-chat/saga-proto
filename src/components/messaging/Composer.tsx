@@ -10,6 +10,7 @@ import {
 import Content from "./Content";
 import { IconButton } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
+import { purple_primary } from "../../colors";
 
 const ComposerDiv = styled.div<any>`
   padding: 1em;
@@ -18,6 +19,7 @@ const ComposerDiv = styled.div<any>`
   box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 1em;
+  display: ${({ show }: any) => (show ? "visible" : "none")};
 `;
 
 const ComposerRow = styled.div`
@@ -28,24 +30,42 @@ const ComposerRow = styled.div`
 const ReplyingToChip = styled.div<any>`
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  max-width: 300px;
   max-height: 200px;
   overflow: hidden;
   padding: 1em 1em 0.5em 1em;
+  margin-bottom: 1em;
+`;
+
+const ComposerInput = styled.input`
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 1em;
+  border-radius: 100px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  outline: none;
+  padding: 5px 10px 5px 10px;
+  box-sizing: border-box;
+  flex: 2;
+  :focus {
+    border: 1px solid ${purple_primary};
+  }
 `;
 
 interface ComposerProps {
   appState: AppState;
   dispatch: AppStateDispatcher;
+  show: boolean;
 }
 
-const Composer: React.FC<ComposerProps> = ({ appState, dispatch }) => {
+const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
   const replyingToContent =
     appState.replyingTo !== null
       ? appState.idToEvent[appState.replyingTo]
       : null;
+
+  const [inputVal, setInputVal] = React.useState("");
   return (
-    <ComposerDiv>
+    <ComposerDiv show={show}>
       {replyingToContent && replyingToContent.kind === "message" && (
         <ReplyingToChip>
           <div
@@ -72,12 +92,7 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch }) => {
         </ReplyingToChip>
       )}
       <ComposerRow>
-        <input
-          type="text"
-          style={{
-            width: "100%",
-          }}
-        />
+        <ComposerInput type="text" placeholder="enter a message" />
       </ComposerRow>
     </ComposerDiv>
   );

@@ -12,7 +12,7 @@ import Cluster from "./Cluster";
 import { Id } from "../../data/types/entity";
 import clusterIDs from "../../data/utils/clusterIDs";
 import isSubstantiveMessage from "../../data/utils/isSubstantiveMessage";
-import isTerminalReaction from "../../data/utils/isTerminalReaction";
+import isReaction from "../../data/utils/isReaction";
 import {
   AppState,
   AppStateDispatcher,
@@ -41,7 +41,7 @@ const TreeView: React.FC<{
     contentType === ContentTab.SUBSTANTIVES
       ? clusterSubstantives(cluster, appState.idToEvent, appState.childMap)
       : cluster.filter((id) =>
-          isTerminalReaction(id, appState.idToEvent, appState.childMap)
+          isReaction(id, appState.idToEvent, appState.childMap)
         )
   );
   return (
