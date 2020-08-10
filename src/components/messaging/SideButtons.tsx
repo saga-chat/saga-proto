@@ -46,10 +46,13 @@ const SideButtons: React.FC<SideButtonsProps> = ({
     }
   }, [show, emojiPickerOpen]);
 
-  const onEmojiSelect = React.useCallback((emoji: EmojiData) => {
-    setEmojiPickerOpen(false);
-    onEmojiPick((emoji as any).native);
-  }, []);
+  const onEmojiSelect = React.useCallback(
+    (emoji: EmojiData) => {
+      setEmojiPickerOpen(false);
+      onEmojiPick((emoji as any).native);
+    },
+    [onEmojiPick]
+  );
   const pickerAnchor = React.useRef<any>();
   return (
     <SideBtns show={show}>
