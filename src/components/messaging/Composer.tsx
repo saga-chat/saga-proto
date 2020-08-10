@@ -70,7 +70,11 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
   const onKey = useCallback(
     (e: any) => {
       if (e.key === "Enter") {
-        dispatch(sendMdMessage(inputVal, appState.replyingTo));
+        const rt =
+          appState.replyingTo === null
+            ? appState.currentParent
+            : appState.replyingTo;
+        dispatch(sendMdMessage(inputVal, rt));
         setInputVal("");
         dispatch(setReplyingTo(null));
       }
@@ -81,7 +85,12 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [appState.replyingTo]);
+  }, [
+    appState.replyingTo,
+    appState.currentParent,
+    appState.currentContentTab,
+    appState.currentView,
+  ]);
   return (
     <ComposerDiv show={show}>
       {replyingToContent && replyingToContent.kind === "message" && (
