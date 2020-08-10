@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { UserOutlined } from "@ant-design/icons";
 import "./App.css";
 import "emoji-mart/css/emoji-mart.css";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
