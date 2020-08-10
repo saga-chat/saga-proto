@@ -6,11 +6,13 @@ import {
   AppState,
   AppStateDispatcher,
   setReplyingTo,
+  sendMdMessage,
 } from "../../data/reducers/appState";
 import Content from "./Content";
 import { IconButton } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { purple_primary } from "../../colors";
+import { useCallback } from "react";
 
 const ComposerDiv = styled.div<any>`
   padding: 1em;
@@ -64,6 +66,22 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
       : null;
 
   const [inputVal, setInputVal] = React.useState("");
+  const inputRef = React.useRef<any>();
+  const onKey = useCallback(
+    (e: any) => {
+      if (e.key === "Enter") {
+        dispatch(sendMdMessage(inputVal, appState.replyingTo));
+        setInputVal("");
+        dispatch(setReplyingTo(null));
+      }
+    },
+    [inputVal]
+  );
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [appState.replyingTo]);
   return (
     <ComposerDiv show={show}>
       {replyingToContent && replyingToContent.kind === "message" && (
@@ -92,7 +110,14 @@ const Composer: React.FC<ComposerProps> = ({ appState, dispatch, show }) => {
         </ReplyingToChip>
       )}
       <ComposerRow>
-        <ComposerInput type="text" placeholder="enter a message" />
+        <ComposerInput
+          type="text"
+          placeholder="enter a message"
+          value={inputVal}
+          onChange={(e: any) => setInputVal(e.target.value)}
+          onKeyPress={onKey}
+          ref={inputRef}
+        />
       </ComposerRow>
     </ComposerDiv>
   );

@@ -21,6 +21,7 @@ export type AppStateAction =
   | { type: "CHANGE_CONTENT_TAB"; contentTab: ContentTab }
   | { type: "SET_REPLYING_TO"; replyingTo: Id | null }
   | { type: "SEND_EVENT"; event: SagaEvent }
+  | { type: "SEND_MD_MESSAGE"; md: string; parent: Id | null }
   | { type: "SEND_REACTION"; emoji: string; parent: Id };
 
 export const pushParent = (parent: Id | null): AppStateAction => ({
@@ -36,6 +37,15 @@ export const setReplyingTo = (replyingTo: Id | null): AppStateAction => ({
 export const sendReaction = (emoji: string, parent: Id): AppStateAction => ({
   type: "SEND_REACTION",
   emoji,
+  parent,
+});
+
+export const sendMdMessage = (
+  md: string,
+  parent: Id | null
+): AppStateAction => ({
+  type: "SEND_MD_MESSAGE",
+  md,
   parent,
 });
 
@@ -127,15 +137,15 @@ export const appStateReducer = (
       }
       return { ...base, treeTop: [...state.treeTop, action.event.id] };
     case "SEND_REACTION":
-      const below = getBottomChild(
-        state.idToEvent,
-        state.childMap,
-        action.parent
-      );
       const reactionEvent: Message = {
         kind: "message",
         parent: action.parent,
-        below,
+        below: getBottomChild(
+          state.idToEvent,
+          state.childMap,
+          state.treeTop,
+          action.parent
+        ),
         seen_by: [state.myID],
         creator: state.myID,
         created: new Date().getTime(),
@@ -155,6 +165,31 @@ export const appStateReducer = (
       return appStateReducer(state, {
         type: "SEND_EVENT",
         event: reactionEvent,
+      });
+    case "SEND_MD_MESSAGE":
+      const mdEvent: Message = {
+        kind: "message",
+        parent: action.parent,
+        below: getBottomChild(
+          state.idToEvent,
+          state.childMap,
+          state.treeTop,
+          action.parent
+        ),
+        seen_by: [state.myID],
+        creator: state.myID,
+        created: new Date().getTime(),
+        id: uniqid(),
+        contents: [
+          {
+            kind: "markdown",
+            contents: action.md,
+          },
+        ],
+      };
+      return appStateReducer(state, {
+        type: "SEND_EVENT",
+        event: mdEvent,
       });
     default:
       console.error(`Cannot handle action ${JSON.stringify(action)}`);

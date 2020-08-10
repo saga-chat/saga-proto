@@ -5,17 +5,17 @@ import { IdToEvent } from "./buildTree";
 const getBottomChild = (
   idToEvent: IdToEvent,
   childMap: ChildMap,
-  parent: Id
+  treeTop: Id[],
+  parent: Id | null
 ): Id | null => {
-  if (childMap[parent].length === 0) {
+  const cm = parent === null ? treeTop : childMap[parent];
+  if (cm.length === 0) {
     return null;
   }
-  const belows: Id[] = childMap[parent]
+  const belows: Id[] = cm
     .map((child: Id) => idToEvent[child].below)
     .filter((child: Id | null) => child !== null) as Id[];
-  return (
-    childMap[parent].find((child: Id) => belows.indexOf(child) < 0) || null
-  );
+  return cm.find((child: Id) => belows.indexOf(child) < 0) || null;
 };
 
 export default getBottomChild;

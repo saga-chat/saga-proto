@@ -34,7 +34,7 @@ import {
 } from "../../data/reducers/appState";
 
 export const MAX_PREVIEW_ELEMS = 5;
-export const MAX_DEPTH = 3;
+export const MAX_DEPTH = 2;
 
 const BubbleControlsDiv = styled.div<any>`
   margin-left: 5px;
@@ -71,7 +71,7 @@ const BubbleAndControls: React.FC<BubbleAndControlsProps> = ({
     appState.childMap
   );
   const lastNSubstantives =
-    depth > MAX_DEPTH ? [] : takeRight(substantiveChildren, MAX_PREVIEW_ELEMS);
+    depth >= MAX_DEPTH ? [] : takeRight(substantiveChildren, MAX_PREVIEW_ELEMS);
   const truncated = difference(childEvents, lastNSubstantives);
   const clustering =
     lastNSubstantives.length > 0
