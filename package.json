@@ -1,5 +1,6 @@
 {
   "name": "saga-alpha",
+  "homepage": "https://saga-chat.github.io/saga-alpha/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -31,7 +32,8 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "deploy": "react-scripts build && gh-pages -d build"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
