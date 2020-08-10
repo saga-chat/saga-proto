@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/saga-alpha/static/css/main.39872602.chunk.css",
-    "main.js": "/saga-alpha/static/js/main.563368a3.chunk.js",
-    "main.js.map": "/saga-alpha/static/js/main.563368a3.chunk.js.map",
+    "main.js": "/saga-alpha/static/js/main.5ec3ffc9.chunk.js",
+    "main.js.map": "/saga-alpha/static/js/main.5ec3ffc9.chunk.js.map",
     "runtime-main.js": "/saga-alpha/static/js/runtime-main.4e23751b.js",
     "runtime-main.js.map": "/saga-alpha/static/js/runtime-main.4e23751b.js.map",
     "static/css/2.c2bc211b.chunk.css": "/saga-alpha/static/css/2.c2bc211b.chunk.css",
     "static/js/2.c1decf35.chunk.js": "/saga-alpha/static/js/2.c1decf35.chunk.js",
     "static/js/2.c1decf35.chunk.js.map": "/saga-alpha/static/js/2.c1decf35.chunk.js.map",
     "index.html": "/saga-alpha/index.html",
-    "precache-manifest.afea5ed644b9d71a9a33a4ffd9308f4d.js": "/saga-alpha/precache-manifest.afea5ed644b9d71a9a33a4ffd9308f4d.js",
+    "precache-manifest.bfa5caadb4e1c19720c150042c490a4a.js": "/saga-alpha/precache-manifest.bfa5caadb4e1c19720c150042c490a4a.js",
     "service-worker.js": "/saga-alpha/service-worker.js",
     "static/css/2.c2bc211b.chunk.css.map": "/saga-alpha/static/css/2.c2bc211b.chunk.css.map",
     "static/css/main.39872602.chunk.css.map": "/saga-alpha/static/css/main.39872602.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.c2bc211b.chunk.css",
     "static/js/2.c1decf35.chunk.js",
     "static/css/main.39872602.chunk.css",
-    "static/js/main.563368a3.chunk.js"
+    "static/js/main.5ec3ffc9.chunk.js"
   ]
 }
