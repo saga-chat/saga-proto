@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "e2c6cbfcf25cafff87f544e7d41c39cf",
+    "revision": "6a2fca47b1ab93f51cb1b8dacbd7b0e9",
     "url": "/saga-alpha/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/saga-alpha/static/css/2.c2bc211b.chunk.css"
   },
   {
-    "revision": "bffedd042acd8b93cf3f",
+    "revision": "05f3b87a0cc51c014552",
     "url": "/saga-alpha/static/css/main.39872602.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/saga-alpha/static/js/2.c1decf35.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "bffedd042acd8b93cf3f",
-    "url": "/saga-alpha/static/js/main.390772db.chunk.js"
+    "revision": "05f3b87a0cc51c014552",
+    "url": "/saga-alpha/static/js/main.f197fd30.chunk.js"
   },
   {
     "revision": "1629baad5a72347f7dd0",
